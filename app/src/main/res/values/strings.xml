@@ -5,4 +5,10 @@
     <string name="title_search">Search</string>
     <string name="title_settings">Settings</string>
     <string name="title_tacnet">TACNET</string>
+
+    <string name="tacnet_hostname">Hostname</string>
+    <string name="tacnet_port">Port</string>
+    <string name="tacnet_connect">Connect</string>
+    <string name="tacnet_server">Server</string>
+    <string name="tacnet_start_server">Start Server</string>
 </resources>
