@@ -1,4 +1,4 @@
-package org.timecrafters.TimeCraftersConfigurationTool.ui.home;
+package org.timecrafters.TimeCraftersConfigurationTool.ui.editor;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,17 +14,17 @@ import androidx.lifecycle.ViewModelProviders;
 
 import org.timecrafters.TimeCraftersConfigurationTool.R;
 
-public class HomeFragment extends Fragment {
+public class EditorFragment extends Fragment {
 
-    private HomeViewModel homeViewModel;
+    private EditorViewModel editorViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
-        final TextView textView = root.findViewById(R.id.text_home);
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        editorViewModel =
+                ViewModelProviders.of(this).get(EditorViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_editor, container, false);
+        final TextView textView = root.findViewById(R.id.text_editor);
+        editorViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);

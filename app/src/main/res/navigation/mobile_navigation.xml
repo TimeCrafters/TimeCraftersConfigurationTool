@@ -3,28 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_editor">
+
+    <fragment
+        android:id="@+id/navigation_tacnet"
+        android:name="org.timecrafters.TimeCraftersConfigurationTool.ui.tacnet.TACNETFragment"
+        android:label="@string/title_tacnet"
+        tools:layout="@layout/fragment_tacnet" />
 
     <fragment
         android:id="@+id/navigation_editor"
-        android:name="org.timecrafters.TimeCraftersConfigurationTool.ui.home.HomeFragment"
-        android:label="@string/title_home"
-        tools:layout="@layout/fragment_home" />
+        android:name="org.timecrafters.TimeCraftersConfigurationTool.ui.editor.EditorFragment"
+        android:label="@string/title_editor"
+        tools:layout="@layout/fragment_editor" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="org.timecrafters.TimeCraftersConfigurationTool.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
-
+        android:id="@+id/navigation_settings"
+        android:name="org.timecrafters.TimeCraftersConfigurationTool.ui.settings.SettingsFragment"
+        android:label="@string/title_settings"
+        tools:layout="@layout/fragment_settings" />
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="org.timecrafters.TimeCraftersConfigurationTool.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
-    <fragment
-        android:id="@+id/TACNETFragment"
-        android:name="org.timecrafters.TimeCraftersConfigurationTool.TACNETFragment"
-        android:label="fragment_tacnet"
-        tools:layout="@layout/fragment_tacnet" />
+        android:id="@+id/navigation_search"
+        android:name="org.timecrafters.TimeCraftersConfigurationTool.ui.search.SearchFragment"
+        android:label="@string/title_search"
+        tools:layout="@layout/fragment_search" />
 </navigation>
