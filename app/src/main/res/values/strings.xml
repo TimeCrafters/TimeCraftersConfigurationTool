@@ -20,6 +20,8 @@
     <string name="settings_manage_presets">Manage Presets</string>
     <string name="settings_manage_configurations">Manage Configurations</string>
 
+    <string name="search">Search</string>
+
     <string name="dialog_close">Close</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_okay">Okay</string>

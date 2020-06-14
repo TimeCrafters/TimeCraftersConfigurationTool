@@ -6,11 +6,13 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
 
-        <item name="buttonStyle">@style/Button</item>
-        <item name="android:textColor">#000</item>
-        <item name="bottomNavigationStyle">@style/NavigationBar</item>
+        <item name="android:textColor">#fff</item>
         <item name="android:fontFamily">@font/dejavusans_condensed_fontfamily</item>
+
+        <item name="buttonStyle">@style/Button</item>
+        <item name="bottomNavigationStyle">@style/NavigationBar</item>
         <item name="editTextStyle">@style/TextInput</item>
+        <item name="switchStyle">@style/ToggleButton</item>
     </style>
 
     <style name="NavigationBar" parent="Widget.Design.BottomNavigationView">
@@ -28,6 +30,19 @@
         <item name="android:fontFamily">@font/dejavusans_condensed_fontfamily</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="ToggleButton" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="android:background">@drawable/button</item>
+        <item name="android:textColor">@color/buttonContent</item>
+        <item name="android:fontFamily">@font/dejavusans_condensed_fontfamily</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:paddingLeft">@dimen/button_padding_left</item>
+        <item name="android:paddingRight">@dimen/button_padding_right</item>
+        <item name="android:paddingTop">@dimen/button_padding_top</item>
+        <item name="android:paddingBottom">@dimen/button_padding_bottom</item>
     </style>
 
     <style name="TextInput" parent="Widget.AppCompat.EditText">

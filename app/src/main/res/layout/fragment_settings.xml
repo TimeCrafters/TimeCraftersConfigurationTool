@@ -37,4 +37,5 @@
             android:layout_height="wrap_content"
             android:text="@string/settings_manage_configurations" />
     </LinearLayout>
+
 </LinearLayout>

@@ -18,8 +18,12 @@
     <color name="list_even">#555</color>
     <color name="list_odd">#999</color>
 
-    <color name="dialogBackground">#eee</color>
+    <color name="tacnetPrimary">#003f7f</color>
+    <color name="tacnetSecondary">#007f7f</color>
+
+    <color name="dialogBackground">#ddd</color>
     <color name="dialogTitle">#fff</color>
+    <color name="dialogLabel">#222</color>
     <color name="dialogCloseColor">#222</color>
     <color name="dialogAlert">#f80</color>
     <color name="dialogError">@color/colorDanger</color>

@@ -19,22 +19,22 @@
         <TextView
             android:id="@+id/dialogTitle"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="24dp"
-            android:textColor="@color/dialogTitle"
-            android:textFontWeight="800"
-            android:text="[Title Not Set]"
+            android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
+            android:gravity="center_vertical"
+            android:text="[Title Not Set]"
+            android:textColor="@color/dialogTitle"
+            android:textSize="@dimen/dialogTitleTextSize"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageButton
             android:id="@+id/dialogCloseButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:backgroundTint="@color/colorDanger"
             android:contentDescription="@string/dialog_close"
             android:src="@drawable/cross"
-            android:backgroundTint="@color/colorDanger"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>

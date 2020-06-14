@@ -41,7 +41,7 @@ public class TACNETFragment extends Fragment {
                 Dialog dialog = new Dialog(getContext());
                 dialog.show();
 
-                ((TextView)dialog.findViewById(R.id.dialogTitle)).setText("Add Variable Variable");
+                ((TextView)dialog.findViewById(R.id.dialogTitle)).setText("Add Variable");
                 LinearLayout view = dialog.findViewById(R.id.dialogContent);
                 view.addView(getLayoutInflater().inflate(R.layout.dialog_edit_variable, null));
             }

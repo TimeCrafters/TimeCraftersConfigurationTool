@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:top="2dp"
-        android:bottom="2dp"
-        android:left="2dp"
-        android:right="2dp">
+        android:top="@dimen/button_margin_top"
+        android:bottom="@dimen/button_margin_bottom"
+        android:left="@dimen/button_margin_left"
+        android:right="@dimen/button_margin_right">
         <shape android:shape="rectangle">
             <solid android:color="@color/buttonDisabled" />
             <corners android:radius="0dp" />
             <padding
-                android:top="8dp"
-                android:bottom="8dp"
-                android:left="16dp"
-                android:right="16dp" />
+                android:top="@dimen/button_padding_top"
+                android:bottom="@dimen/button_padding_bottom"
+                android:left="@dimen/button_padding_left"
+                android:right="@dimen/button_padding_right" />
         </shape>
     </item>
 </layer-list>
