@@ -10,5 +10,6 @@
     <color name="buttonDisabled">#765</color>
     <color name="navigationButtonSelected">#00a000</color>
     <color name="navigationButtonHover">#00d000</color>
+    <color name="navigationButtonActive">#00d000</color>
     <color name="navigationButton">#006000</color>
 </resources>
