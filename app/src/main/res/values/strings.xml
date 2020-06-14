@@ -16,4 +16,17 @@
     <string name="navbar_editor_description">Edit configuration</string>
     <string name="navbar_settings_description">Manage presets and configuration files</string>
     <string name="navbar_search_description">Search for groups and actions</string>
+
+    <string name="settings_manage_presets">Manage Presets</string>
+    <string name="settings_manage_configurations">Manage Configurations</string>
+
+    <string name="dialog_close">Close</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_okay">Okay</string>
+    <string name="dialog_add">Add</string>
+    <string name="dialog_update">Update</string>
+
+    <string name="variable_name">Name</string>
+    <string name="variable_type">Type</string>
+    <string name="variable_value">Value</string>
 </resources>

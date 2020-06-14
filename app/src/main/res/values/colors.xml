@@ -6,10 +6,22 @@
     <color name="colorSecondary">#006000</color>
     <color name="colorTertiary">#00d000</color>
 
+    <color name="colorDanger">#800</color>
+
     <color name="buttonContent">#ffffff</color>
     <color name="buttonDisabled">#765</color>
     <color name="navigationButtonSelected">#00a000</color>
     <color name="navigationButtonHover">#00d000</color>
     <color name="navigationButtonActive">#00d000</color>
     <color name="navigationButton">#006000</color>
+
+    <color name="list_even">#555</color>
+    <color name="list_odd">#999</color>
+
+    <color name="dialogBackground">#eee</color>
+    <color name="dialogTitle">#fff</color>
+    <color name="dialogCloseColor">#222</color>
+    <color name="dialogAlert">#f80</color>
+    <color name="dialogError">@color/colorDanger</color>
+    <color name="dialogNotice">#080</color>
 </resources>
