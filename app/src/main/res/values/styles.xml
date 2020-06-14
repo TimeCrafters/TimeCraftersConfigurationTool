@@ -5,6 +5,43 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="buttonStyle">@style/Button</item>
+        <item name="android:textColor">#000</item>
+        <item name="bottomNavigationStyle">@style/NavigationBar</item>
+        <item name="android:fontFamily">@font/dejavusans_condensed_fontfamily</item>
+        <item name="editTextStyle">@style/TextInput</item>
     </style>
 
+    <style name="NavigationBar" parent="Widget.Design.BottomNavigationView">
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="itemBackground">@drawable/navigation_button</item>
+        <item name="labelVisibilityMode">unlabeled</item>
+        <item name="itemIconTint">#fff</item>
+        <item name="itemTextColor">#fff</item>
+    </style>
+
+    <style name="Button" parent="Widget.AppCompat.Button">
+        <item name="android:background">@drawable/button</item>
+        <item name="rippleColor">@color/colorAccent</item>
+        <item name="android:textColor">@color/buttonContent</item>
+        <item name="android:fontFamily">@font/dejavusans_condensed_fontfamily</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="TextInput" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/button</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textColorHint">#bbbbbb</item>
+    </style>
+
+<!--    <style name="TextView" parent="Widget.AppCompat.TextView">-->
+<!--        <item name="android:background">@drawable/button</item>-->
+<!--        <item name="android:textColor">@color/buttonContent</item>-->
+<!--        <item name="android:fontFamily">@font/dejavusans_condensed_fontfamily</item>-->
+<!--        <item name="android:textStyle">bold</item>-->
+<!--        <item name="android:paddingLeft">16dp</item>-->
+<!--        <item name="android:paddingRight">16dp</item>-->
+<!--    </style>-->
 </resources>

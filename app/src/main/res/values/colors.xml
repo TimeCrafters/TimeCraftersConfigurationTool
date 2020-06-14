@@ -3,4 +3,12 @@
     <color name="colorPrimary">#008000</color>
     <color name="colorPrimaryDark">#003000</color>
     <color name="colorAccent">#00d000</color>
+    <color name="colorSecondary">#006000</color>
+    <color name="colorTertiary">#00d000</color>
+
+    <color name="buttonContent">#ffffff</color>
+    <color name="buttonDisabled">#765</color>
+    <color name="navigationButtonSelected">#00a000</color>
+    <color name="navigationButtonHover">#00d000</color>
+    <color name="navigationButton">#006000</color>
 </resources>

@@ -3,20 +3,24 @@
 
     <item
         android:id="@+id/navigation_tacnet"
+        android:contentDescription="@string/navbar_tacnet_description"
         android:icon="@drawable/tacnet"
         android:title="@string/title_tacnet" />
     <item
         android:id="@+id/navigation_editor"
+        android:contentDescription="@string/navbar_editor_description"
         android:icon="@drawable/editor"
         android:title="@string/title_editor" />
 
     <item
         android:id="@+id/navigation_settings"
+        android:contentDescription="@string/navbar_settings_description"
         android:icon="@drawable/settings"
         android:title="@string/title_settings" />
 
     <item
         android:id="@+id/navigation_search"
+        android:contentDescription="@string/navbar_search_description"
         android:icon="@drawable/search"
         android:title="@string/title_search" />
 

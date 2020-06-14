@@ -11,4 +11,9 @@
     <string name="tacnet_connect">Connect</string>
     <string name="tacnet_server">Server</string>
     <string name="tacnet_start_server">Start Server</string>
+
+    <string name="navbar_tacnet_description">Manage network connection</string>
+    <string name="navbar_editor_description">Edit configuration</string>
+    <string name="navbar_settings_description">Manage presets and configuration files</string>
+    <string name="navbar_search_description">Search for groups and actions</string>
 </resources>
