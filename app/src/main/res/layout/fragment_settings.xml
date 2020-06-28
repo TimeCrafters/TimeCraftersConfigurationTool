@@ -16,7 +16,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/manage_presets"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/settings_manage_presets" />
@@ -32,7 +32,7 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <Button
-            android:id="@+id/button5"
+            android:id="@+id/manage_configurations"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/settings_manage_configurations" />

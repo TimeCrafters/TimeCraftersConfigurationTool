@@ -23,6 +23,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.settings.presets.PresetsActivity"
+            android:label="@string/settings_manage_presets">
+        </activity>
+        <activity
+            android:name=".ui.settings.configurations.ConfigurationsActivity"
+            android:label="@string/settings_manage_configurations">
+        </activity>
     </application>
 
 </manifest>

@@ -21,7 +21,7 @@
             android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/tacnet_connect"
+                android:id="@+id/tacnet_connect_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="48dp"
@@ -48,7 +48,7 @@
                     android:text="@string/tacnet_hostname" />
 
                 <EditText
-                    android:id="@+id/editTextTextPersonName"
+                    android:id="@+id/hostname"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:ems="10"
@@ -71,14 +71,14 @@
                     android:inputType="number" />
 
                 <Button
-                    android:id="@+id/connect"
+                    android:id="@+id/tacnet_connect"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/tacnet_connect" />
             </LinearLayout>
 
             <LinearLayout
-                android:id="@+id/tacnet_server"
+                android:id="@+id/tacnet_server_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="48dp"
