@@ -5,8 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,9 +13,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import org.timecrafters.TimeCraftersConfigurationTool.R;
-import org.timecrafters.TimeCraftersConfigurationTool.dialogs.Dialog;
-
-import static android.view.View.inflate;
+import org.timecrafters.TimeCraftersConfigurationTool.dialogs.VariableDialog;
 
 public class TACNETFragment extends Fragment {
 
@@ -38,12 +34,8 @@ public class TACNETFragment extends Fragment {
         connect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Dialog dialog = new Dialog(getContext());
-                dialog.show();
-
-                ((TextView)dialog.findViewById(R.id.dialogTitle)).setText("Add Variable");
-                LinearLayout view = dialog.findViewById(R.id.dialogContent);
-                view.addView(getLayoutInflater().inflate(R.layout.dialog_edit_variable, null));
+                VariableDialog dialog = new VariableDialog();
+                dialog.show(getFragmentManager(), null);
             }
         });
 
