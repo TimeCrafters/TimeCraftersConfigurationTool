@@ -5,15 +5,24 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageButton;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 import org.timecrafters.TimeCraftersConfigurationTool.R;
 
 public class Dialog extends DialogFragment {
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+
         View v = View.inflate(getContext(), R.layout.dialog_base, null);
 
         ImageButton closeButton = v.findViewById(R.id.dialogCloseButton);

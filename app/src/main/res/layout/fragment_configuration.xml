@@ -18,7 +18,7 @@
 
     <ImageButton
         android:id="@+id/rename_configuration"
-        style="@style/Widget.AppCompat.ImageButton"
+        style="@style/Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.8"
@@ -28,7 +28,7 @@
 
     <ImageButton
         android:id="@+id/delete_configuration"
-        style="@style/Widget.AppCompat.ImageButton"
+        style="@style/Button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="0.8"

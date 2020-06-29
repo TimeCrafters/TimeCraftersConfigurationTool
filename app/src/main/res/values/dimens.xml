@@ -14,4 +14,5 @@
     <dimen name="button_margin_bottom">8dp</dimen>
 
     <dimen name="dialogTitleTextSize">18dp</dimen>
+    <dimen name="dialog_button_margin">36dp</dimen>
 </resources>
