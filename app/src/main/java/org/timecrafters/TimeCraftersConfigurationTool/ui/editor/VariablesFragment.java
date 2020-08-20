@@ -1,7 +1,6 @@
 package org.timecrafters.TimeCraftersConfigurationTool.ui.editor;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,49 +12,43 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavAction;
 import androidx.navigation.Navigation;
+import androidx.navigation.ui.NavigationUI;
 
 import org.timecrafters.TimeCraftersConfigurationTool.R;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Config;
-import org.timecrafters.TimeCraftersConfigurationTool.backend.Config.Group;
 
-public class EditorFragment extends Fragment {
-
-    final private String TAG = "EditorFragment";
-
-    private EditorViewModel editorViewModel;
+public class VariablesFragment extends Fragment {
     private Config config;
-    private TextView configName;
     private LinearLayout container;
+    private Config.Group group;
+    private Config.Action action;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        editorViewModel =
-                ViewModelProviders.of(this).get(EditorViewModel.class);
-        final View root = inflater.inflate(R.layout.fragment_editor, container, false);
-        this.configName = root.findViewById(R.id.configuration_name);
+        final View root = inflater.inflate(R.layout.fragment_variables, container, false);
         this.container = root.findViewById(R.id.container);
 
         this.config = Backend.instance().getConfig();
+        this.group = config.getGroups().get(0);
+        this.action = group.getActions().get(0);
         if (config != null) {
-            configName.setVisibility(View.GONE);
-            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Config: " + config.getName());
+            ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Action: " + action.name);
 
-            populateGroups();
-        } else {
-            Log.d(TAG, "config not set");
+            populateVariables();
         }
 
         return root;
     }
 
-    private void populateGroups() {
+    private void populateVariables() {
         int i = 0;
-        for (Group group : config.getGroups()) {
-            View view = View.inflate(getContext(), R.layout.fragment_part_groups, null);
-            Button name = view.findViewById(R.id.name);
+        for (Config.Variable variable : action.getVariables()) {
+            View view = View.inflate(getContext(), R.layout.fragment_part_variables, null);
+            TextView name = view.findViewById(R.id.name);
+            TextView value = view.findViewById(R.id.value);
             ImageButton rename = view.findViewById(R.id.rename);
             ImageButton delete = view.findViewById(R.id.delete);
 
@@ -65,13 +58,8 @@ public class EditorFragment extends Fragment {
                 view.setBackgroundColor(getResources().getColor(R.color.list_odd));
             }
 
-            name.setText(group.name);
-            name.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Navigation.findNavController(v).navigate(R.id.actionsFragment);
-                }
-            });
+            name.setText(variable.name);
+            value.setText("" + variable.value());
 
             i++;
             container.addView(view);

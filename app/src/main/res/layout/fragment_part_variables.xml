@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/group"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/button_margin_left"
+            android:layout_marginTop="@dimen/button_margin_top"
+            android:layout_marginRight="@dimen/button_margin_right"
+            android:layout_marginBottom="@dimen/button_margin_bottom"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="TextView"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/rename"
+            style="@style/Button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            app:srcCompat="@drawable/gear" />
+
+        <ImageButton
+            android:id="@+id/delete"
+            style="@style/DangerousButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"
+            app:srcCompat="@drawable/trash" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/value"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/button_margin_left"
+        android:layout_marginTop="@dimen/button_margin_top"
+        android:layout_marginRight="@dimen/button_margin_right"
+        android:layout_marginBottom="@dimen/button_margin_bottom"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:text="TextView" />
+</LinearLayout>

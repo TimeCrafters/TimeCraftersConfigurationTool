@@ -21,6 +21,7 @@
     <string name="settings_manage_configurations">Manage Configurations</string>
 
     <string name="search">Search</string>
+    <string name="groups">Groups</string>
 
     <string name="dialog_close">Close</string>
     <string name="dialog_cancel">Cancel</string>

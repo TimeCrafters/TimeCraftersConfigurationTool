@@ -23,6 +23,8 @@
     <color name="tacnetPrimary">#003f7f</color>
     <color name="tacnetSecondary">#007f7f</color>
 
+    <color name="switchOn">#ff8800</color>
+
     <color name="dialogBackground">#ddd</color>
     <color name="dialogTitle">#fff</color>
     <color name="dialogLabel">#222</color>

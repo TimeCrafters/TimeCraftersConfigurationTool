@@ -7,15 +7,6 @@
     android:orientation="vertical"
     tools:context=".ui.editor.EditorFragment">
 
-    <TextView
-        android:id="@+id/configuration_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/list_even"
-        android:text="No configuration active"
-        android:textAlignment="center"
-        android:textSize="18sp" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">

@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -37,6 +38,8 @@ public class Backend {
         loadSettings();
         if (!settings.config.isEmpty()) {
             loadConfig(settings.config);
+        } else {
+            config = new Config();
         }
         tacnet = new TACNET();
 
@@ -69,10 +72,11 @@ public class Backend {
     public boolean isConfigChanged() { return configChanged; }
 
     public void loadConfig(String name) {
-        File file = new File("" + TAC.CONFIGS_PATH + File.separator + name);
+        String path = "" + TAC.CONFIGS_PATH + File.separator + name;
+        File file = new File(path);
 
         if (file.exists() && file.isFile()) {
-            // TODO: Load configuration
+            config = new Config(name, path);
         }
     }
 
@@ -140,7 +144,7 @@ public class Backend {
                 .create();
     }
 
-    private String readFromFile(String path) {
+    protected String readFromFile(String path) {
         StringBuilder text = new StringBuilder();
 
         try {

@@ -2,37 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/configuration"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
-    <Button
-        android:id="@+id/configuration_name"
-        style="@style/Button"
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.2"
-        android:text="Button"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent"
+        android:layout_weight="1"/>
 
-    <ImageButton
-        android:id="@+id/rename_configuration"
-        style="@style/Button"
+    <LinearLayout
+        android:id="@+id/configuration"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.8"
-        android:src="@drawable/gear"
-        app:layout_constraintStart_toStartOf="@+id/configuration_name"
-        app:layout_constraintTop_toTopOf="@+id/configuration_name" />
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:orientation="vertical"></LinearLayout>
 
-    <ImageButton
-        android:id="@+id/delete_configuration"
-        style="@style/DangerousButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.8"
-        android:src="@drawable/trash"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 </LinearLayout>

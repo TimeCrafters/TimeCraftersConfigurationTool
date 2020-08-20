@@ -10,6 +10,7 @@
         <item name="android:fontFamily">@font/dejavusans_condensed_fontfamily</item>
 
         <item name="buttonStyle">@style/Button</item>
+        <item name="imageButtonStyle">@style/Button</item>
         <item name="bottomNavigationStyle">@style/NavigationBar</item>
         <item name="editTextStyle">@style/TextInput</item>
         <item name="switchStyle">@style/ToggleButton</item>

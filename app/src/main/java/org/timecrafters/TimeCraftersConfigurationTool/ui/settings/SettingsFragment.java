@@ -6,17 +6,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.Navigation;
 
 import org.timecrafters.TimeCraftersConfigurationTool.R;
-import org.timecrafters.TimeCraftersConfigurationTool.ui.settings.configurations.ConfigurationsActivity;
-import org.timecrafters.TimeCraftersConfigurationTool.ui.settings.presets.PresetsActivity;
 
 public class SettingsFragment extends Fragment {
 
@@ -26,21 +24,21 @@ public class SettingsFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         settingsViewModel =
                 ViewModelProviders.of(this).get(SettingsViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_settings, container, false);
+        final View root = inflater.inflate(R.layout.fragment_settings, container, false);
         final Button managePresets = root.findViewById(R.id.manage_presets);
         final Button manageConfigurations = root.findViewById(R.id.manage_configurations);
 
         managePresets.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getContext(), PresetsActivity.class));
+                Navigation.findNavController(root).navigate(R.id.presetsFragment);
             }
         });
 
         manageConfigurations.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getContext(), ConfigurationsActivity.class));
+                Navigation.findNavController(root).navigate(R.id.configurationsFragment);
             }
         });
 

@@ -71,6 +71,7 @@ public class TACNETFragment extends Fragment {
             public void onClick(View v) {
                 VariableDialog dialog = new VariableDialog();
                 dialog.show(getFragmentManager(), null);
+                Backend.instance().saveSettings();
             }
         });
 

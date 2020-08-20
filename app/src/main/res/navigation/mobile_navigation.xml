@@ -15,16 +15,47 @@
         android:id="@+id/navigation_editor"
         android:name="org.timecrafters.TimeCraftersConfigurationTool.ui.editor.EditorFragment"
         android:label="@string/title_editor"
-        tools:layout="@layout/fragment_editor" />
+        tools:layout="@layout/fragment_editor" >
+        <action
+            android:id="@+id/action_navigation_editor_to_actionsFragment"
+            app:destination="@id/actionsFragment" />
+    </fragment>
 
     <fragment
         android:id="@+id/navigation_settings"
         android:name="org.timecrafters.TimeCraftersConfigurationTool.ui.settings.SettingsFragment"
         android:label="@string/title_settings"
-        tools:layout="@layout/fragment_settings" />
+        tools:layout="@layout/fragment_settings" >
+        <action
+            android:id="@+id/action_navigation_settings_to_configurationsFragment"
+            app:destination="@id/configurationsFragment" />
+        <action
+            android:id="@+id/action_navigation_settings_to_presetsFragment"
+            app:destination="@id/presetsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/navigation_search"
         android:name="org.timecrafters.TimeCraftersConfigurationTool.ui.search.SearchFragment"
         android:label="@string/title_search"
         tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/actionsFragment"
+        android:name="org.timecrafters.TimeCraftersConfigurationTool.ui.editor.ActionsFragment"
+        android:label="Actions" >
+        <action
+            android:id="@+id/action_actionsFragment_to_variablesFragment"
+            app:destination="@id/variablesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/variablesFragment"
+        android:name="org.timecrafters.TimeCraftersConfigurationTool.ui.editor.VariablesFragment"
+        android:label="Variables" />
+    <fragment
+        android:id="@+id/configurationsFragment"
+        android:name="org.timecrafters.TimeCraftersConfigurationTool.ui.settings.configurations.ConfigurationsFragment"
+        android:label="Manage Configurations" />
+    <fragment
+        android:id="@+id/presetsFragment"
+        android:name="org.timecrafters.TimeCraftersConfigurationTool.ui.settings.presets.PresetsFragment"
+        android:label="Manage Presets" />
 </navigation>
