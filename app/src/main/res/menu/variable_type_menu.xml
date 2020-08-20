@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/boolean_type"
+        android:title="Boolean" />
+    <item
+        android:id="@+id/double_type"
+        android:title="Double" />
+    <item
+        android:id="@+id/float_type"
+        android:title="Float" />
+    <item
+        android:id="@+id/integer_type"
+        android:title="Integer" />
+    <item
+        android:id="@+id/long_type"
+        android:title="Long" />
+    <item
+        android:id="@+id/string_type"
+        android:title="String" />
+</menu>

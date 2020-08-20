@@ -13,6 +13,7 @@
         <item name="bottomNavigationStyle">@style/NavigationBar</item>
         <item name="editTextStyle">@style/TextInput</item>
         <item name="switchStyle">@style/ToggleButton</item>
+        <item name="popupMenuStyle">@style/PopUpMenu</item>
     </style>
 
     <style name="NavigationBar" parent="Widget.Design.BottomNavigationView">
@@ -58,6 +59,15 @@
         <item name="android:background">@drawable/button</item>
         <item name="android:textColor">#ffffff</item>
         <item name="android:textColorHint">#bbbbbb</item>
+    </style>
+
+    <style name="PopUpMenu" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:background">@drawable/menu_item</item>
+        <item name="rippleColor">@color/colorAccent</item>
+        <item name="android:textColor">@color/buttonContent</item>
+        <item name="android:fontFamily">@font/dejavusans_condensed_fontfamily</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textAllCaps">false</item>
     </style>
 
 <!--    <style name="TextView" parent="Widget.AppCompat.TextView">-->
