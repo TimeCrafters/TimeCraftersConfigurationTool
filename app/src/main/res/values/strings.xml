@@ -32,4 +32,8 @@
     <string name="variable_name">Name</string>
     <string name="variable_type">Type</string>
     <string name="variable_value">Value</string>
+    <string name="comment">Comment</string>
+    <string name="warning_no_config_active">No active configuration set</string>
+    <string name="tacnet_stop_server">Stop Server</string>
+    <string name="tacnet_server_status">Server Status</string>
 </resources>

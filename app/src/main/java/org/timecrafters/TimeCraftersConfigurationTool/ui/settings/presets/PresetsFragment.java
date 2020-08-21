@@ -1,6 +1,6 @@
 package org.timecrafters.TimeCraftersConfigurationTool.ui.settings.presets;
 
-import androidx.fragment.app.Fragment;
+import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersFragment;
 
-public class PresetsFragment extends Fragment {
+public class PresetsFragment extends TimeCraftersFragment {
 }

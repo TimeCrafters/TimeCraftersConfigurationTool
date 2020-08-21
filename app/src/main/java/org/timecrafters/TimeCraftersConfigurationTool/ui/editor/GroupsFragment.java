@@ -8,20 +8,25 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.navigation.Navigation;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.timecrafters.TimeCraftersConfigurationTool.R;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Config;
-import org.timecrafters.TimeCraftersConfigurationTool.backend.Config.Group;
+import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Group;
+import org.timecrafters.TimeCraftersConfigurationTool.dialogs.ConfirmationDialog;
+import org.timecrafters.TimeCraftersConfigurationTool.dialogs.GroupDialog;
+import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersFragment;
 
-public class EditorFragment extends Fragment {
+public class GroupsFragment extends TimeCraftersFragment {
 
     final private String TAG = "EditorFragment";
 
@@ -34,11 +39,24 @@ public class EditorFragment extends Fragment {
                              ViewGroup container, Bundle savedInstanceState) {
         editorViewModel =
                 ViewModelProviders.of(this).get(EditorViewModel.class);
-        final View root = inflater.inflate(R.layout.fragment_editor, container, false);
+        final View root = inflater.inflate(R.layout.fragment_groups, container, false);
         this.configName = root.findViewById(R.id.configuration_name);
         this.container = root.findViewById(R.id.container);
+        final FloatingActionButton actionButton = root.findViewById(R.id.actionButton);
+        final ScrollView scrollView = root.findViewById(R.id.scrollview);
+        actionButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                GroupDialog dialog = new GroupDialog();
+                dialog.show(getFragmentManager(), null);
+            }
+        });
 
-        this.config = Backend.instance().getConfig();
+        floatingActionButtonAutoHide(actionButton, scrollView);
+
+        if (Backend.instance() != null)
+            this.config = Backend.instance().getConfig();
+
         if (config != null) {
             configName.setVisibility(View.GONE);
             ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Config: " + config.getName());
@@ -53,7 +71,7 @@ public class EditorFragment extends Fragment {
 
     private void populateGroups() {
         int i = 0;
-        for (Group group : config.getGroups()) {
+        for (final Group group : config.getGroups()) {
             View view = View.inflate(getContext(), R.layout.fragment_part_groups, null);
             Button name = view.findViewById(R.id.name);
             ImageButton rename = view.findViewById(R.id.rename);
@@ -70,6 +88,22 @@ public class EditorFragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     Navigation.findNavController(v).navigate(R.id.actionsFragment);
+                }
+            });
+
+            rename.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    GroupDialog dialog = new GroupDialog(group);
+                    dialog.show(getFragmentManager(), null);
+                }
+            });
+
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ConfirmationDialog dialog = new ConfirmationDialog("Are you sure?", "Really delete " + group.name + "?", null);
+                    dialog.show(getFragmentManager(), null);
                 }
             });
 

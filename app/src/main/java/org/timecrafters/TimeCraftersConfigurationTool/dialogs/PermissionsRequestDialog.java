@@ -1,6 +1,5 @@
 package org.timecrafters.TimeCraftersConfigurationTool.dialogs;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,22 +8,20 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
-
 import org.timecrafters.TimeCraftersConfigurationTool.MainActivity;
 import org.timecrafters.TimeCraftersConfigurationTool.R;
-import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.TAC;
+import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersDialog;
 
-public class PermissionsRequestDialog extends Dialog {
+public class PermissionsRequestDialog extends TimeCraftersDialog {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setCancelable(false);
 
-        View v = super.onCreateView(inflater, container, savedInstanceState);
+        View root = super.onCreateView(inflater, container, savedInstanceState);
 
-        ((TextView)v.findViewById(R.id.dialogTitle)).setText("Storage Permission Required");
-        LinearLayout view = v.findViewById(R.id.dialogContent);
+        ((TextView)root.findViewById(R.id.dialogTitle)).setText("Storage Permission Required");
+        LinearLayout view = root.findViewById(R.id.dialogContent);
         view.addView(getLayoutInflater().inflate(R.layout.dialog_permission_request, null));
         ((TextView)view.findViewById(R.id.message)).setText("Permission is required to write to external storage:\n\n" + TAC.ROOT_PATH);
 
@@ -48,6 +45,6 @@ public class PermissionsRequestDialog extends Dialog {
         });
 
 
-        return v;
+        return root;
     }
 }

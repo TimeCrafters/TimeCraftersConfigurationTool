@@ -11,15 +11,15 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import org.timecrafters.TimeCraftersConfigurationTool.R;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
-import org.timecrafters.TimeCraftersConfigurationTool.dialogs.VariableDialog;
+import org.timecrafters.TimeCraftersConfigurationTool.dialogs.ServerDialog;
+import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersFragment;
 
-public class TACNETFragment extends Fragment {
+public class TACNETFragment extends TimeCraftersFragment {
 
     private static final String TAG = "TACNETFragment";
     private TACNETViewModel TACNETViewModel;
@@ -69,8 +69,8 @@ public class TACNETFragment extends Fragment {
         connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                VariableDialog dialog = new VariableDialog();
-                dialog.show(getFragmentManager(), null);
+//                ConnectDialog dialog = new ConnectDialog();
+//                dialog.show(getFragmentManager(), null);
                 Backend.instance().saveSettings();
             }
         });
@@ -78,7 +78,7 @@ public class TACNETFragment extends Fragment {
         startServerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                VariableDialog dialog = new VariableDialog();
+                ServerDialog dialog = new ServerDialog();
                 dialog.show(getFragmentManager(), null);
             }
         });

@@ -2,8 +2,6 @@ package org.timecrafters.TimeCraftersConfigurationTool;
 
 import android.Manifest;
 import android.os.Bundle;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -16,7 +14,6 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
-import org.timecrafters.TimeCraftersConfigurationTool.dialogs.Dialog;
 import org.timecrafters.TimeCraftersConfigurationTool.dialogs.PermissionsRequestDialog;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;

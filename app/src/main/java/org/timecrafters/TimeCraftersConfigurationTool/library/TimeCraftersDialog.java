@@ -1,4 +1,4 @@
-package org.timecrafters.TimeCraftersConfigurationTool.dialogs;
+package org.timecrafters.TimeCraftersConfigurationTool.library;
 
 import android.graphics.Point;
 import android.os.Bundle;
@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
 
 import androidx.annotation.Nullable;
@@ -13,7 +14,7 @@ import androidx.fragment.app.DialogFragment;
 
 import org.timecrafters.TimeCraftersConfigurationTool.R;
 
-public class Dialog extends DialogFragment {
+public class TimeCraftersDialog extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,5 +49,13 @@ public class Dialog extends DialogFragment {
         Point point = new Point();
         getActivity().getWindowManager().getDefaultDisplay().getSize(point);
         getDialog().getWindow().setLayout((int) (point.x * 0.8), ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
+    public void styleSwitch(CompoundButton buttonView, boolean isChecked) {
+        if (isChecked) {
+            buttonView.setBackground(getResources().getDrawable(R.drawable.button));
+        } else {
+            buttonView.setBackground(getResources().getDrawable(R.drawable.dangerous_button));
+        }
     }
 }

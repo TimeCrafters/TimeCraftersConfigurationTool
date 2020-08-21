@@ -30,9 +30,10 @@
 
         <ImageButton
             android:id="@+id/dialogCloseButton"
-            android:layout_width="wrap_content"
+            style="Da"
+            android:layout_width="56dp"
             android:layout_height="match_parent"
-            android:backgroundTint="@color/colorDanger"
+            android:background="@drawable/dangerous_button"
             android:contentDescription="@string/dialog_close"
             android:src="@drawable/cross"
             app:layout_constraintEnd_toEndOf="parent"

@@ -5,25 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.editor.EditorFragment">
+    tools:context=".ui.editor.GroupsFragment">
 
     <TextView
         android:id="@+id/configuration_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/list_even"
-        android:text="No configuration active"
+        android:text="@string/warning_no_config_active"
         android:textAlignment="center"
+        android:layout_gravity="center_horizontal"
         android:textSize="18sp" />
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <include layout="@layout/partial_editor"/>
 
-        <LinearLayout
-            android:id="@+id/container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical" />
-    </ScrollView>
 </LinearLayout>
