@@ -13,18 +13,24 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import org.timecrafters.TimeCraftersConfigurationTool.R;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersDialog;
+import org.timecrafters.TimeCraftersConfigurationTool.tacnet.support.ServerStatsSyncHandler;
 
 public class ServerDialog extends TimeCraftersDialog {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         setCancelable(false);
 
-        View root = super.onCreateView(inflater, container, savedInstanceState);
+        final View root = super.onCreateView(inflater, container, savedInstanceState);
+        if (Backend.instance().getServer() == null) {
+            Backend.instance().startServer();
+        }
+
 
         final TextView title = root.findViewById(R.id.dialogTitle);
         final ConstraintLayout titlebar = root.findViewById(R.id.titlebar);
         final LinearLayout view = root.findViewById(R.id.dialogContent);
         view.addView(getLayoutInflater().inflate(R.layout.dialog_server, null));
+        new ServerStatsSyncHandler(view, 1_000);
 
         title.setText(getResources().getString(R.string.tacnet_server_status));
 
@@ -33,6 +39,7 @@ public class ServerDialog extends TimeCraftersDialog {
             @Override
             public void onClick(View v) {
                 // TODO: Halt server
+                Backend.instance().stopServer();
                 dismiss();
             }
         });

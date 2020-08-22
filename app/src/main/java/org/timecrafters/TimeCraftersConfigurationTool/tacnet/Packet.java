@@ -5,7 +5,7 @@ import android.util.Log;
 import java.util.Arrays;
 
 public class Packet {
-    final static public String PROTOCOL_VERSION = "0";
+    final static public String PROTOCOL_VERSION = "1";
     final static public String PROTOCOL_HEADER_SEPERATOR = "|";
     final static public String PROTOCOL_HEARTBEAT = "heartbeat";
     private static final String TAG = "TACNET|Packet";
@@ -14,11 +14,33 @@ public class Packet {
     // NOTE: PacketType is cast to a char, no more than 255 packet types can exist unless
     //       header is updated.
     public enum PacketType {
-        HANDSHAKE,
-        HEARTBEAT,
-        DUMP_CONFIG,
-        CHANGE_ACTION,
-        CHANGE_VARIABLE,
+        HANDSHAKE(0),
+        HEARTBEAT(1),
+        ERROR(2),
+
+        DOWNLOAD_CONFIG(10),
+        UPLOAD_CONFIG(11),
+
+        ADD_GROUP(20),
+        UPDATE_GROUP(21),
+        DELETE_GROUP(22),
+
+        ADD_ACTION(30),
+        UPDATE_ACTION(31),
+        DELETE_ACTION(32),
+
+        ADD_VARIABLE(40),
+        UPDATE_VARIABLE(41),
+        DELETE_VARIABLE(42);
+
+        private int id;
+        final public int getId() {
+            return id;
+        }
+
+        PacketType(int id) {
+            this.id = id;
+        }
     }
 
     private String protocolVersion;
@@ -37,7 +59,7 @@ public class Packet {
 
     static public Packet fromStream(String message) {
         String version;
-        PacketType type;
+        PacketType type = null;
         int length;
         String body;
 
@@ -54,9 +76,21 @@ public class Packet {
         }
 
         version = slice[0];
-        type = PacketType.values()[Integer.parseInt(slice[1])];
+//        type = PacketType.values()[Integer.parseInt(slice[1])];
         length = Integer.parseInt(slice[2]);
         body = slice[slice.length - 1];
+
+        int typeId = Integer.parseInt(slice[1]);
+        for (PacketType packetType : PacketType.values()) {
+            if (packetType.getId() == typeId) {
+                type = packetType;
+                break;
+            }
+        }
+
+        if (type == null) {
+            return null;
+        }
 
         return new Packet(version, type, length, body);
     }
@@ -84,7 +118,7 @@ public class Packet {
         String string = "";
         string += PROTOCOL_VERSION;
         string += PROTOCOL_HEADER_SEPERATOR;
-        string += packetType.ordinal();
+        string += packetType.getId();
         string += PROTOCOL_HEADER_SEPERATOR;
         string += contentLength;
         string += PROTOCOL_HEADER_SEPERATOR;

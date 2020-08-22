@@ -34,11 +34,29 @@ public class ConfigurationsFragment extends TimeCraftersFragment {
             }
         });
 
-        for (String config : Backend.instance().configsList()) {
+        int i = 0;
+        for (String configFile : Backend.instance().configsList()) {
+            final String config = configFile.replace(".json", "");
             View view = inflater.inflate(R.layout.fragment_part_configuration, null);
+
+            if (i % 2 == 0) { // even
+                view.setBackgroundColor(getResources().getColor(R.color.list_even));
+            } else {
+                view.setBackgroundColor(getResources().getColor(R.color.list_odd));
+            }
+
             Button configName = view.findViewById(R.id.name);
             configName.setText(config);
+            configName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Backend.instance().getSettings().config = config;
+                    Backend.instance().loadConfig(config);
+                    Backend.instance().saveSettings();
+                }
+            });
 
+            i++;
             configsContainer.addView(view);
         }
 

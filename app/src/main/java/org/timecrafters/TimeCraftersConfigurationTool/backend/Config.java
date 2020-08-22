@@ -17,10 +17,9 @@ public class Config {
     private ArrayList<Group> groups;
     private ArrayList<Preset> presets;
 
-    // TODO: DELETE ME
-    public Config() {
-        this.name = "DEBUG ONLY";
-        this.configuration = new Configuration(new Date(), new Date(), 0, 32);
+    public Config(String name) {
+        this.name = name;
+        this.configuration = new Configuration(new Date(), new Date(), TAC.CONFIG_SPEC_VERSION, 32);
         groups = new ArrayList<>();
         presets = new ArrayList<>();
     }

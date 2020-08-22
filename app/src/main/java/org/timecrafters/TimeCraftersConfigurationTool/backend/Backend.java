@@ -11,6 +11,7 @@ import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Group;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Preset;
 import org.timecrafters.TimeCraftersConfigurationTool.serializers.SettingsDeserializer;
 import org.timecrafters.TimeCraftersConfigurationTool.serializers.SettingsSerializer;
+import org.timecrafters.TimeCraftersConfigurationTool.tacnet.Server;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -32,18 +33,24 @@ public class Backend {
     private static final String TAG = "Backend";
     static private Backend instance;
     private TACNET tacnet;
+    private Server server;
+    private Exception lastServerError;
     private Config config;
     private Settings settings;
     private boolean configChanged, settingsChanged;
 
     public Backend() {
-        instance = this;
+        if (Backend.instance() != null) {
+            throw(new RuntimeException("Backend instance already exists!"));
+        } else {
+            instance = this;
+        }
 
         loadSettings();
         if (!settings.config.isEmpty()) {
             loadConfig(settings.config);
         } else {
-            config = new Config();
+            config = new Config("DEBUG DEBUG DEBUG");
         }
         tacnet = new TACNET();
 
@@ -57,6 +64,33 @@ public class Backend {
 
     public TACNET tacnet() {
         return tacnet;
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public void startServer() {
+        try {
+            server = new Server(settings.port);
+            server.start();
+        } catch (IOException error) {
+            lastServerError = error;
+        }
+    }
+
+    public void stopServer() {
+        if (server != null) {
+            try {
+                server.stop();
+            } catch (IOException error) {
+                lastServerError = error;
+            }
+        }
+    }
+
+    public Exception getLastServerError() {
+        return lastServerError;
     }
 
     public Config getConfig() {
@@ -76,7 +110,7 @@ public class Backend {
     public boolean isConfigChanged() { return configChanged; }
 
     public void loadConfig(String name) {
-        String path = "" + TAC.CONFIGS_PATH + File.separator + name;
+        String path = "" + TAC.CONFIGS_PATH + File.separator + name + ".json";
         File file = new File(path);
 
         if (file.exists() && file.isFile()) {
@@ -104,13 +138,10 @@ public class Backend {
     }
 
     public void writeNewConfig(String name) {
-        String path = "" + TAC.CONFIGS_PATH + File.separator + name;
+        String path = TAC.CONFIGS_PATH + File.separator + name + ".json";
         File file = new File(path);
 
-        Configuration configuration = new Configuration(new Date(), new Date(), TAC.CONFIG_SPEC_VERSION, 0);
-        ArrayList<Group> groups = new ArrayList<>();
-        ArrayList<Preset> presets = new ArrayList<>();
-        Config config = new Config(configuration, groups, presets);
+        Config config = new Config(name);
 
         Gson gson = new Gson();
 
@@ -136,7 +167,6 @@ public class Backend {
         };
         File fileList[] = directory.listFiles(filter);
         for (File file : fileList) {
-            Log.d(TAG, "configsList: " + file.getName());
             list.add(file.getName());
         }
 
@@ -144,7 +174,7 @@ public class Backend {
     }
 
     // TODO: Write De/serializers for config
-    private Gson gsonForConfig() {
+    public Gson gsonForConfig() {
 //        return new GsonBuilder()
 //                .registerTypeAdapter(Config.class, new ConfigSerializer())
 //                .registerTypeAdapter(COnfig.class, new ConfigDeserializer())
@@ -186,14 +216,14 @@ public class Backend {
         saveSettings();
     }
 
-    private Gson gsonForSettings() {
+    public Gson gsonForSettings() {
         return new GsonBuilder()
                 .registerTypeAdapter(Settings.class, new SettingsSerializer())
                 .registerTypeAdapter(Settings.class, new SettingsDeserializer())
                 .create();
     }
 
-    protected String readFromFile(String path) {
+    public String readFromFile(String path) {
         StringBuilder text = new StringBuilder();
 
         try {
@@ -213,7 +243,7 @@ public class Backend {
         return text.toString();
     }
 
-    protected boolean writeToFile(String filePath, String content) {
+    public boolean writeToFile(String filePath, String content) {
         try {
             if (filePath.startsWith(TAC.ROOT_PATH)) {
                 createFolders(filePath);

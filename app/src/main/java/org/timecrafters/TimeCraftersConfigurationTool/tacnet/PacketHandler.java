@@ -3,6 +3,9 @@ package org.timecrafters.TimeCraftersConfigurationTool.tacnet;
 import android.util.Log;
 
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
+import org.timecrafters.TimeCraftersConfigurationTool.backend.TAC;
+
+import java.io.File;
 import java.lang.reflect.Array;
 import java.util.Arrays;
 
@@ -41,15 +44,25 @@ public class PacketHandler {
                 return;
             }
 
-            case DUMP_CONFIG: {
-                handleDumpConfig(packet);
+            case ERROR: {
+//                handleHeartBeat(packet);
+//                return;
+            }
+
+            case DOWNLOAD_CONFIG: {
+                handleDownloadConfig(packet);
                 return;
             }
 
-            case CHANGE_ACTION: {
-                handleChangeAction(packet);
+            case UPLOAD_CONFIG: {
+                handleUploadConfig(packet);
                 return;
             }
+
+//            case CHANGE_ACTION: {
+//                handleChangeAction(packet);
+//                return;
+//            }
 
             default: {
                 return;
@@ -62,22 +75,42 @@ public class PacketHandler {
     // NO-OP
     private void handleHeartBeat(Packet packet) {}
 
-    private void handleDumpConfig(Packet packet) {
-        if (
-                packet.getContent().length() > 4 && packet.getContent().charAt(0) == "[".toCharArray()[0] &&
-                        packet.getContent().charAt(packet.getContent().length() - 1) == "]".toCharArray()[0]
-        ) { /* "unless" keyword anyone? */ } else { return; }
+    private void handleUploadConfig(Packet packet) {
+        String[] split = packet.getContent().split("\\" + Packet.PROTOCOL_HEADER_SEPERATOR, 2);
+        final String configName = split[0];
+        final String json = split[1];
+        if (configName.length() == 0 && false) { //!Backend.instance().configIsValid(json)) {
+            return;
+        }
+        if (configName.length() == 0) {
+            return;
+        }
+        final String path = TAC.CONFIGS_PATH + File.separator + configName + ".json";
 
         Log.i(TAG, "Got valid json: " + packet.getContent());
 
-        if (hostIsAConnection) {
-            // save and reload menu
-//            Writer.overwriteConfigFile(packet.getContent());
+        Backend.instance().writeToFile(path, json);
+    }
 
-//            Backend.instance().loadConfig();
+    private void handleDownloadConfig(Packet packet) {
+        final String configName = packet.getContent();
+
+        Log.i(TAG, "Got request for config: " + packet.getContent());
+        Packet pkt;
+        if (Backend.instance().configsList().contains("" + configName + ".json")) {
+            final String path = TAC.CONFIGS_PATH + File.separator + configName + ".json";
+
+            String content = Backend.instance().readFromFile(path);
+            Packet.create(Packet.PacketType.UPLOAD_CONFIG, content);
+        } else { // Errored
+            final String content = "ERROR";
+            Packet.create(Packet.PacketType.ERROR, content);
+        }
+
+        if (hostIsAConnection) {
+            Backend.instance().tacnet().puts(packet.toString());
         } else {
-            // save
-//            Writer.overwriteConfigFile(packet.getContent());
+            Backend.instance().getServer().getActiveClient().puts(packet.toString());
         }
     }
 
@@ -97,9 +130,9 @@ public class PacketHandler {
         return Packet.create(Packet.PacketType.HEARTBEAT, Packet.PROTOCOL_HEARTBEAT);
     }
 
-    static public Packet packetDumpConfig(String string) {
-        string = string.replace("\n", " ");
-
-        return Packet.create(Packet.PacketType.DUMP_CONFIG, string);
-    }
+//    static public Packet packetDumpConfig(String string) {
+//        string = string.replace("\n", " ");
+//
+//        return Packet.create(Packet.PacketType.DUMP_CONFIG, string);
+//    }
 }

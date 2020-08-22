@@ -41,7 +41,9 @@ public class MainActivity extends AppCompatActivity {
         if (!havePermissions()) {
             new PermissionsRequestDialog().show(getSupportFragmentManager(), null);
         } else {
-            new Backend();
+            if (Backend.instance() == null) {
+                new Backend();
+            }
         }
     }
 
