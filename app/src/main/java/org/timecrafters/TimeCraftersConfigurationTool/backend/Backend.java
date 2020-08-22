@@ -6,6 +6,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.internal.LinkedTreeMap;
 
+import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Configuration;
+import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Group;
+import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Preset;
 import org.timecrafters.TimeCraftersConfigurationTool.serializers.SettingsDeserializer;
 import org.timecrafters.TimeCraftersConfigurationTool.serializers.SettingsSerializer;
 
@@ -15,6 +18,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -100,7 +104,52 @@ public class Backend {
     }
 
     public void writeNewConfig(String name) {
-        // TODO: Implement
+        String path = "" + TAC.CONFIGS_PATH + File.separator + name;
+        File file = new File(path);
+
+        Configuration configuration = new Configuration(new Date(), new Date(), TAC.CONFIG_SPEC_VERSION, 0);
+        ArrayList<Group> groups = new ArrayList<>();
+        ArrayList<Preset> presets = new ArrayList<>();
+        Config config = new Config(configuration, groups, presets);
+
+        Gson gson = new Gson();
+
+        try {
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write(gsonForConfig().toJson(config));
+            fileWriter.close();
+        } catch (IOException error) {
+            /* TODO */
+            Log.d(TAG, "writeNewConfig: IO Error: " + error.toString());
+        }
+    }
+
+    public ArrayList<String> configsList() {
+        ArrayList<String> list = new ArrayList<>();
+
+        File directory = new File(TAC.CONFIGS_PATH);
+        FilenameFilter filter = new FilenameFilter() {
+            @Override
+            public boolean accept(File dir, String name) {
+                return name.endsWith(".json");
+            }
+        };
+        File fileList[] = directory.listFiles(filter);
+        for (File file : fileList) {
+            Log.d(TAG, "configsList: " + file.getName());
+            list.add(file.getName());
+        }
+
+        return list;
+    }
+
+    // TODO: Write De/serializers for config
+    private Gson gsonForConfig() {
+//        return new GsonBuilder()
+//                .registerTypeAdapter(Config.class, new ConfigSerializer())
+//                .registerTypeAdapter(COnfig.class, new ConfigDeserializer())
+//                .create();
+        return new GsonBuilder().create();
     }
 
     public void settingsChanged() {

@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import org.timecrafters.TimeCraftersConfigurationTool.R;
+import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersDialog;
 
 public class ServerDialog extends TimeCraftersDialog {
@@ -31,6 +32,7 @@ public class ServerDialog extends TimeCraftersDialog {
         stopServer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // TODO: Halt server
                 dismiss();
             }
         });

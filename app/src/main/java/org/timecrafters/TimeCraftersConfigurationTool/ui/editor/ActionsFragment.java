@@ -40,7 +40,7 @@ public class ActionsFragment extends TimeCraftersFragment {
         final ScrollView scrollView = root.findViewById(R.id.scrollview);
 
         this.config = Backend.instance().getConfig();
-        this.group = config.getGroups().get(0);
+        this.group = config.getGroups().get(getArguments().getInt("group_index"));
         if (config != null) {
             ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Group: " + group.name);
 
@@ -90,7 +90,10 @@ public class ActionsFragment extends TimeCraftersFragment {
             edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Navigation.findNavController(v).navigate(R.id.variablesFragment);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("group_index", getArguments().getInt("group_index"));
+                    bundle.putInt("action_index", group.getActions().indexOf(action));
+                    Navigation.findNavController(v).navigate(R.id.variablesFragment, bundle);
                 }
             });
 

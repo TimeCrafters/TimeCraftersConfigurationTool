@@ -87,7 +87,9 @@ public class GroupsFragment extends TimeCraftersFragment {
             name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Navigation.findNavController(v).navigate(R.id.actionsFragment);
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("group_index", config.getGroups().indexOf(group));
+                    Navigation.findNavController(v).navigate(R.id.actionsFragment, bundle);
                 }
             });
 

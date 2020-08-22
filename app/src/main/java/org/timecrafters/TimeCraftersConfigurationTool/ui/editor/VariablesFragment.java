@@ -37,8 +37,8 @@ public class VariablesFragment extends TimeCraftersFragment {
         final ScrollView scrollView = root.findViewById(R.id.scrollview);
 
         this.config = Backend.instance().getConfig();
-        this.group = config.getGroups().get(0);
-        this.action = group.getActions().get(0);
+        this.group = config.getGroups().get(getArguments().getInt("group_index"));
+        this.action = group.getActions().get(getArguments().getInt("action_index"));
         if (config != null) {
             ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Action: " + action.name);
 
