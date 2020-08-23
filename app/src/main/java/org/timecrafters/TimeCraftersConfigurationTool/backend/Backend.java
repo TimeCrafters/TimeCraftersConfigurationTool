@@ -4,16 +4,28 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.internal.LinkedTreeMap;
 
+import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Action;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Configuration;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Group;
-import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Preset;
+import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Presets;
+import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Variable;
+import org.timecrafters.TimeCraftersConfigurationTool.serializers.ActionDeserializer;
+import org.timecrafters.TimeCraftersConfigurationTool.serializers.ActionSerializer;
+import org.timecrafters.TimeCraftersConfigurationTool.serializers.ConfigDeserializer;
+import org.timecrafters.TimeCraftersConfigurationTool.serializers.ConfigSerializer;
+import org.timecrafters.TimeCraftersConfigurationTool.serializers.ConfigurationDeserializer;
+import org.timecrafters.TimeCraftersConfigurationTool.serializers.ConfigurationSerializer;
+import org.timecrafters.TimeCraftersConfigurationTool.serializers.GroupDeserializer;
+import org.timecrafters.TimeCraftersConfigurationTool.serializers.GroupSerializer;
+import org.timecrafters.TimeCraftersConfigurationTool.serializers.PresetsDeserializer;
+import org.timecrafters.TimeCraftersConfigurationTool.serializers.PresetsSerializer;
 import org.timecrafters.TimeCraftersConfigurationTool.serializers.SettingsDeserializer;
 import org.timecrafters.TimeCraftersConfigurationTool.serializers.SettingsSerializer;
+import org.timecrafters.TimeCraftersConfigurationTool.serializers.VariableDeserializer;
+import org.timecrafters.TimeCraftersConfigurationTool.serializers.VariableSerializer;
 import org.timecrafters.TimeCraftersConfigurationTool.tacnet.Server;
 
-import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -21,13 +33,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class Backend {
     private static final String TAG = "Backend";
@@ -49,8 +56,6 @@ public class Backend {
         loadSettings();
         if (!settings.config.isEmpty()) {
             loadConfig(settings.config);
-        } else {
-            config = new Config("DEBUG DEBUG DEBUG");
         }
         tacnet = new TACNET();
 
@@ -105,6 +110,8 @@ public class Backend {
         config.getConfiguration().updatedAt = new Date();
         config.getConfiguration().revision += 1;
         configChanged = true;
+
+        saveConfig();
     }
 
     public boolean isConfigChanged() { return configChanged; }
@@ -114,14 +121,18 @@ public class Backend {
         File file = new File(path);
 
         if (file.exists() && file.isFile()) {
-            config = new Config(name, path);
+            config = gsonForConfig().fromJson(readFromFile(path), Config.class);
+            config.setName(name);
         }
     }
 
-    public boolean saveConfig(String name) {
-        // TODO: Implement save config
+    public boolean saveConfig() {
+        if (config == null) { return false; }
+
+        final String path = "" + TAC.CONFIGS_PATH + File.separator + getConfig().getName() + ".json";
         configChanged = false;
-        return  false;
+
+        return writeToFile(path, gsonForConfig().toJson(config));
     }
 
     public void uploadConfig() {
@@ -173,13 +184,26 @@ public class Backend {
         return list;
     }
 
-    // TODO: Write De/serializers for config
     public Gson gsonForConfig() {
-//        return new GsonBuilder()
-//                .registerTypeAdapter(Config.class, new ConfigSerializer())
-//                .registerTypeAdapter(COnfig.class, new ConfigDeserializer())
-//                .create();
-        return new GsonBuilder().create();
+        return new GsonBuilder()
+                .registerTypeAdapter(Config.class, new ConfigSerializer())
+                .registerTypeAdapter(Config.class, new ConfigDeserializer())
+
+                .registerTypeAdapter(Configuration.class, new ConfigurationSerializer())
+                .registerTypeAdapter(Configuration.class, new ConfigurationDeserializer())
+
+                .registerTypeAdapter(Group.class, new GroupSerializer())
+                .registerTypeAdapter(Group.class, new GroupDeserializer())
+
+                .registerTypeAdapter(Action.class, new ActionSerializer())
+                .registerTypeAdapter(Action.class, new ActionDeserializer())
+
+                .registerTypeAdapter(Variable.class, new VariableSerializer())
+                .registerTypeAdapter(Variable.class, new VariableDeserializer())
+
+                .registerTypeAdapter(Presets.class, new PresetsSerializer())
+                .registerTypeAdapter(Presets.class, new PresetsDeserializer())
+                .create();
     }
 
     public void settingsChanged() {
