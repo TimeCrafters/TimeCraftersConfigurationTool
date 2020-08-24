@@ -97,7 +97,7 @@ public class PacketHandler {
 
         Log.i(TAG, "Got request for config: " + packet.getContent());
         Packet pkt;
-        if (Backend.instance().configsList().contains("" + configName + ".json")) {
+        if (Backend.instance().configsList().contains(configName)) {
             final String path = TAC.CONFIGS_PATH + File.separator + configName + ".json";
 
             String content = Backend.instance().readFromFile(path);

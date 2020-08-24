@@ -54,7 +54,6 @@ public class ConfigurationsFragment extends TimeCraftersFragment {
 
         int i = 0;
         for (final String configFile : Backend.instance().configsList()) {
-            final String config = configFile.replace(".json", "");
             View view = inflater.inflate(R.layout.fragment_part_configuration, null);
 
             if (i % 2 == 0) { // even
@@ -66,20 +65,20 @@ public class ConfigurationsFragment extends TimeCraftersFragment {
             final Button configName = view.findViewById(R.id.name);
             final ImageButton rename = view.findViewById(R.id.rename);
             final ImageButton delete = view.findViewById(R.id.delete);
-            configName.setText(config);
+            configName.setText(configFile);
             configName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (Backend.instance().getSettings().config.equals(config)) {
+                    if (Backend.instance().getSettings().config.equals(configFile)) {
                         return;
                     }
 
-                    Backend.instance().getSettings().config = config;
-                    Backend.instance().loadConfig(config);
+                    Backend.instance().getSettings().config = configFile;
+                    Backend.instance().loadConfig(configFile);
                     Backend.instance().saveSettings();
 
                     View snackbarHost = getActivity().findViewById(R.id.snackbar_host);
-                    Snackbar.make(snackbarHost, "Loaded config: " + config, Snackbar.LENGTH_LONG).show();
+                    Snackbar.make(snackbarHost, "Loaded config: " + configFile, Snackbar.LENGTH_LONG).show();
                 }
             });
 
@@ -88,7 +87,7 @@ public class ConfigurationsFragment extends TimeCraftersFragment {
                 public void onClick(View v) {
                     ConfigurationDialog dialog = new ConfigurationDialog();
                     Bundle bundle = new Bundle();
-                    bundle.putString("config_name", config);
+                    bundle.putString("config_name", configFile);
                     dialog.setArguments(bundle);
                     dialog.show(getFragmentManager(), null);
                 }
@@ -101,13 +100,13 @@ public class ConfigurationsFragment extends TimeCraftersFragment {
                     Bundle bundle = new Bundle();
                     final String actionKey = "delete_configuration";
                     bundle.putString("title", "Are you sure?");
-                    bundle.putString("message", "Destroy configuration " + config + "?");
+                    bundle.putString("message", "Destroy configuration " + configFile + "?");
                     bundle.putString("action", actionKey);
                     bundle.putBoolean("extreme_danger", true);
                     Runnable action = new Runnable() {
                         @Override
                         public void run() {
-                            Backend.instance().deleteConfig(config);
+                            Backend.instance().deleteConfig(configFile);
                         }
                     } ;
                     Backend.getStorage().put(actionKey, action);

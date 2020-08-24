@@ -1,6 +1,8 @@
 package org.timecrafters.TimeCraftersConfigurationTool.dialogs;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +16,10 @@ import org.timecrafters.TimeCraftersConfigurationTool.R;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersDialog;
 
-import java.util.regex.Pattern;
-
 public class ConfigurationDialog extends TimeCraftersDialog {
     private static final String TAG = "ConfigurationDialog";
     private String configName;
+    private TextView nameError;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -29,6 +30,7 @@ public class ConfigurationDialog extends TimeCraftersDialog {
 
         final TextView title = root.findViewById(R.id.dialogTitle);
         final EditText name = view.findViewById(R.id.name);
+        this.nameError = view.findViewById(R.id.name_error);
         final Button cancel = view.findViewById(R.id.cancel);
         final Button mutate = view.findViewById(R.id.mutate);
 
@@ -40,6 +42,24 @@ public class ConfigurationDialog extends TimeCraftersDialog {
         } else {
             title.setText("Create Configuration");
         }
+
+        name.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                validated(name.getText().toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,12 +72,18 @@ public class ConfigurationDialog extends TimeCraftersDialog {
             public void onClick(View v) {
                 final String newConfigName = name.getText().toString();
 
-                if (isValid(newConfigName)) {
+                if (newConfigName.equals(configName)) {
+                    dismiss();
+                    return;
+                }
+
+                if (validated(newConfigName)) {
                     if (configName != null) {
                         Backend.instance().moveConfig(configName, newConfigName);
                     } else {
                         Backend.instance().writeNewConfig(newConfigName);
                     }
+
                     dismiss();
                 } else {
                     // TODO: Show friendly error message
@@ -69,7 +95,25 @@ public class ConfigurationDialog extends TimeCraftersDialog {
         return root;
     }
 
-    private boolean isValid(String name) {
-        return name.length() > 0 && name.matches("^[A-Za-z0-9\\._\\-]+$");
+    private boolean validated(String name) {
+        String message = "";
+        if (Backend.instance().configsList().contains(name)) {
+            message += "Name is not unique!";
+
+        } else if (name.length() <= 0) {
+            message += "Name cannot be blank!";
+
+        } else if (!name.matches("^[A-Za-z0-9\\._\\-]+$")) {
+            message += "Name can only contain alphanumeric characters, dashes, underscores, periods, and no spaces!";
+        }
+
+        if (message.length() > 0) {
+            nameError.setVisibility(View.VISIBLE);
+            nameError.setText(message);
+            return false;
+        } else {
+            nameError.setVisibility(View.GONE);
+            return true;
+        }
     }
 }

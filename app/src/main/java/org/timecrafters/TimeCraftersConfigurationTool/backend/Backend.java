@@ -218,7 +218,7 @@ public class Backend {
         };
         File fileList[] = directory.listFiles(filter);
         for (File file : fileList) {
-            list.add(file.getName());
+            list.add(file.getName().replace(".json", ""));
         }
 
         return list;
