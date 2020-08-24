@@ -1,7 +1,5 @@
 package org.timecrafters.TimeCraftersConfigurationTool.ui.settings.configurations;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,9 +18,13 @@ import org.timecrafters.TimeCraftersConfigurationTool.R;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
 import org.timecrafters.TimeCraftersConfigurationTool.dialogs.ConfigurationDialog;
 import org.timecrafters.TimeCraftersConfigurationTool.dialogs.ConfirmationDialog;
+import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersDialog;
+import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersDialogRunnable;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersFragment;
 
 public class ConfigurationsFragment extends TimeCraftersFragment {
+    final private String deleteActionKey = "delete_configuration";
+
     private LayoutInflater inflater;
     private LinearLayout configsContainer;
     private View root;
@@ -40,7 +42,7 @@ public class ConfigurationsFragment extends TimeCraftersFragment {
             @Override
             public void onClick(View v) {
                 ConfigurationDialog dialog = new ConfigurationDialog();
-                dialog.show(getFragmentManager(), null);
+                dialog.show(getFragmentManager(), "add_configuration");
             }
         });
 
@@ -82,7 +84,6 @@ public class ConfigurationsFragment extends TimeCraftersFragment {
                 }
             });
 
-            final ConfigurationsFragment fragment = this;
             rename.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -90,8 +91,8 @@ public class ConfigurationsFragment extends TimeCraftersFragment {
                     Bundle bundle = new Bundle();
                     bundle.putString("config_name", configFile);
                     dialog.setArguments(bundle);
-                    dialog.setTargetFragment(fragment, 0);
-                    dialog.show(getFragmentManager().beginTransaction(), "rename_configuration");
+
+                    dialog.show(getFragmentManager(), "rename_configuration");
                 }
             });
 
@@ -100,21 +101,26 @@ public class ConfigurationsFragment extends TimeCraftersFragment {
                 public void onClick(View v) {
                     ConfirmationDialog dialog = new ConfirmationDialog();
                     Bundle bundle = new Bundle();
-                    final String actionKey = "delete_configuration";
-                    bundle.putString("title", "Are you sure?");
+
                     bundle.putString("message", "Destroy configuration " + configFile + "?");
-                    bundle.putString("action", actionKey);
+                    bundle.putString("action", deleteActionKey);
                     bundle.putBoolean("extreme_danger", true);
-                    Runnable action = new Runnable() {
+                    TimeCraftersDialogRunnable action = new TimeCraftersDialogRunnable() {
                         @Override
-                        public void run() {
+                        public void run(TimeCraftersDialog dialog) {
                             Backend.instance().deleteConfig(configFile);
+                            Backend.getStorage().remove(deleteActionKey);
+
+                            ConfigurationsFragment fragment = (ConfigurationsFragment) dialog.getFragmentManager().getPrimaryNavigationFragment();
+                            if (fragment != null) {
+                                fragment.populateConfigFiles();
+                            }
                         }
                     } ;
-                    Backend.getStorage().put(actionKey, action);
+                    Backend.getStorage().put(deleteActionKey, action);
                     dialog.setArguments(bundle);
 
-                    dialog.show(getFragmentManager(), null);
+                    dialog.show(getFragmentManager(), deleteActionKey);
                 }
             });
 

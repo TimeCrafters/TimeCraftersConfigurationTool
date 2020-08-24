@@ -2,6 +2,7 @@ package org.timecrafters.TimeCraftersConfigurationTool.library;
 
 import android.graphics.Point;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +16,6 @@ import androidx.fragment.app.DialogFragment;
 import org.timecrafters.TimeCraftersConfigurationTool.R;
 
 public class TimeCraftersDialog extends DialogFragment {
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);

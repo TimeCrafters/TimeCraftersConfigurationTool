@@ -19,6 +19,7 @@ import org.timecrafters.TimeCraftersConfigurationTool.ui.settings.configurations
 
 public class ConfigurationDialog extends TimeCraftersDialog {
     private static final String TAG = "ConfigurationDialog";
+
     private String configName;
     private TextView nameError;
 
@@ -85,8 +86,10 @@ public class ConfigurationDialog extends TimeCraftersDialog {
                         Backend.instance().writeNewConfig(newConfigName);
                     }
 
-                    // Caution
-                    ((ConfigurationsFragment)getTargetFragment()).populateConfigFiles();
+                    ConfigurationsFragment fragment = (ConfigurationsFragment) getFragmentManager().getPrimaryNavigationFragment();
+                    if (fragment != null) {
+                        fragment.populateConfigFiles();
+                    }
                     dismiss();
                 }
             }

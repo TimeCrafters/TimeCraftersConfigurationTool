@@ -1,6 +1,7 @@
 package org.timecrafters.TimeCraftersConfigurationTool.ui.editor;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,8 @@ import org.timecrafters.TimeCraftersConfigurationTool.dialogs.VariableDialog;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersFragment;
 
 public class VariablesFragment extends TimeCraftersFragment {
+    final private String TAG = "VariablesFragment";
+
     private Config config;
     private LinearLayout container;
     private Group group;
@@ -39,6 +42,7 @@ public class VariablesFragment extends TimeCraftersFragment {
         this.config = Backend.instance().getConfig();
         this.group = config.getGroups().get(getArguments().getInt("group_index"));
         this.action = group.getActions().get(getArguments().getInt("action_index"));
+
         if (config != null) {
             ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Action: " + action.name);
 
@@ -57,7 +61,9 @@ public class VariablesFragment extends TimeCraftersFragment {
         return root;
     }
 
-    private void populateVariables() {
+    public void populateVariables() {
+        container.removeAllViews();
+
         int i = 0;
         for (final Variable variable : action.getVariables()) {
             View view = View.inflate(getContext(), R.layout.fragment_part_variables, null);

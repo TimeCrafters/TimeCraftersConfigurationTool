@@ -59,7 +59,9 @@ public class ActionsFragment extends TimeCraftersFragment {
         return root;
     }
 
-    private void populateActions() {
+    public void populateActions() {
+        container.removeAllViews();
+
         int i = 0;
         for (final Action action : group.getActions()) {
             final View view = View.inflate(getContext(), R.layout.fragment_part_actions, null);

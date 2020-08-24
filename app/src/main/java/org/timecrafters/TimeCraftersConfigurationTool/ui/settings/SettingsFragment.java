@@ -26,14 +26,14 @@ public class SettingsFragment extends TimeCraftersFragment {
         managePresets.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(root).navigate(R.id.presetsFragment);
+                Navigation.findNavController(root).navigate(R.id.action_navigation_settings_to_presetsFragment);
             }
         });
 
         manageConfigurations.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Navigation.findNavController(root).navigate(R.id.configurationsFragment);
+                Navigation.findNavController(root).navigate(R.id.action_navigation_settings_to_configurationsFragment);
             }
         });
 
