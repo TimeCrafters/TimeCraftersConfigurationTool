@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 
 public class ConfigurationDialog extends TimeCraftersDialog {
     private static final String TAG = "ConfigurationDialog";
+    private String configName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,7 +32,14 @@ public class ConfigurationDialog extends TimeCraftersDialog {
         final Button cancel = view.findViewById(R.id.cancel);
         final Button mutate = view.findViewById(R.id.mutate);
 
-        title.setText("Create Configuration");
+        if (getArguments() != null) {
+            configName = getArguments().getString("config_name");
+            title.setText("Editing " + configName);
+            name.setText(configName);
+            mutate.setText(getResources().getString(R.string.dialog_update));
+        } else {
+            title.setText("Create Configuration");
+        }
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -39,16 +47,20 @@ public class ConfigurationDialog extends TimeCraftersDialog {
             }
         });
 
-//        mutate.setText(getResources().getString(R.string.dialog_update));
         mutate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String configName = name.getText().toString();
+                final String newConfigName = name.getText().toString();
 
-                if (isValid(configName)) {
-                    Backend.instance().writeNewConfig(configName);
+                if (isValid(newConfigName)) {
+                    if (configName != null) {
+                        Backend.instance().moveConfig(configName, newConfigName);
+                    } else {
+                        Backend.instance().writeNewConfig(newConfigName);
+                    }
                     dismiss();
                 } else {
+                    // TODO: Show friendly error message
                     Log.d(TAG, "onClick: InValid");
                 }
             }

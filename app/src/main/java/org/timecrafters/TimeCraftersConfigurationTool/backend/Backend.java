@@ -33,11 +33,17 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.FilenameFilter;
 import java.io.IOException;
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 
 public class Backend {
     private static final String TAG = "Backend";
+    static private HashMap<String, Object> storage = new HashMap<>();
     static private Backend instance;
     private TACNET tacnet;
     private Server server;
@@ -45,6 +51,10 @@ public class Backend {
     private Config config;
     private Settings settings;
     private boolean configChanged, settingsChanged;
+
+    public static HashMap<String, Object> getStorage() {
+        return storage;
+    }
 
     public Backend() {
         if (Backend.instance() != null) {
@@ -114,10 +124,14 @@ public class Backend {
         saveConfig();
     }
 
-    public boolean isConfigChanged() { return configChanged; }
+    public boolean hasConfigChanged() { return configChanged; }
+
+    public String configPath(String name) {
+        return TAC.CONFIGS_PATH + File.separator + name + ".json";
+    }
 
     public void loadConfig(String name) {
-        String path = "" + TAC.CONFIGS_PATH + File.separator + name + ".json";
+        String path = configPath(name);
         File file = new File(path);
 
         if (file.exists() && file.isFile()) {
@@ -129,10 +143,36 @@ public class Backend {
     public boolean saveConfig() {
         if (config == null) { return false; }
 
-        final String path = "" + TAC.CONFIGS_PATH + File.separator + getConfig().getName() + ".json";
+        final String path = configPath(getConfig().getName());
         configChanged = false;
 
         return writeToFile(path, gsonForConfig().toJson(config));
+    }
+
+    public boolean moveConfig(String oldName, String newName) {
+        final String oldPath = configPath(oldName);
+        final String newPath = configPath(newName);
+
+        final File oldFile = new File(oldPath);
+        final File newFile = new File(newPath);
+
+        if (!oldFile.exists() || !oldFile.isFile()) {
+            Log.e(TAG, "moveConfig: Can not move config file \"" + oldPath + "\" does not exists!");
+            return false;
+        }
+
+        if (newFile.exists() && newFile.isFile()) {
+            Log.e(TAG, "moveConfig: Config file \"" + newPath + "\" already exists!");
+            return false;
+        }
+
+        return oldFile.renameTo(newFile);
+    }
+
+    public boolean deleteConfig(String name) {
+        File file = new File(configPath(name));
+
+        return file.delete();
     }
 
     public void uploadConfig() {
@@ -149,7 +189,7 @@ public class Backend {
     }
 
     public void writeNewConfig(String name) {
-        String path = TAC.CONFIGS_PATH + File.separator + name + ".json";
+        String path = configPath(name);
         File file = new File(path);
 
         Config config = new Config(name);

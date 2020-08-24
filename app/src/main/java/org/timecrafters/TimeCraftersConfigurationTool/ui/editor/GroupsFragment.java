@@ -104,7 +104,12 @@ public class GroupsFragment extends TimeCraftersFragment {
             delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ConfirmationDialog dialog = new ConfirmationDialog("Are you sure?", "Really delete " + group.name + "?", null);
+                    ConfirmationDialog dialog = new ConfirmationDialog();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("title", "Are you sure?");
+                    bundle.putString("message", "Delete group " + group.name + "?");
+                    dialog.setArguments(bundle);
+
                     dialog.show(getFragmentManager(), null);
                 }
             });
