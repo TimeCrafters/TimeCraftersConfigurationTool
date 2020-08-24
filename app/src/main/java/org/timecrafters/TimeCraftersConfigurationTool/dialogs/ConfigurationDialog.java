@@ -15,6 +15,7 @@ import android.widget.TextView;
 import org.timecrafters.TimeCraftersConfigurationTool.R;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersDialog;
+import org.timecrafters.TimeCraftersConfigurationTool.ui.settings.configurations.ConfigurationsFragment;
 
 public class ConfigurationDialog extends TimeCraftersDialog {
     private static final String TAG = "ConfigurationDialog";
@@ -84,10 +85,9 @@ public class ConfigurationDialog extends TimeCraftersDialog {
                         Backend.instance().writeNewConfig(newConfigName);
                     }
 
+                    // Caution
+                    ((ConfigurationsFragment)getTargetFragment()).populateConfigFiles();
                     dismiss();
-                } else {
-                    // TODO: Show friendly error message
-                    Log.d(TAG, "onClick: InValid");
                 }
             }
         });

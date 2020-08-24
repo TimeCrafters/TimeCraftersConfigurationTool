@@ -17,12 +17,8 @@ import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersFragme
 
 public class SettingsFragment extends TimeCraftersFragment {
 
-    private SettingsViewModel settingsViewModel;
-
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        settingsViewModel =
-                ViewModelProviders.of(this).get(SettingsViewModel.class);
         final View root = inflater.inflate(R.layout.fragment_settings, container, false);
         final Button managePresets = root.findViewById(R.id.manage_presets);
         final Button manageConfigurations = root.findViewById(R.id.manage_configurations);
@@ -41,11 +37,6 @@ public class SettingsFragment extends TimeCraftersFragment {
             }
         });
 
-        settingsViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-            }
-        });
         return root;
     }
 }

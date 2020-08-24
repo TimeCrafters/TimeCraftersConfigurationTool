@@ -49,7 +49,7 @@ public class ConfigurationsFragment extends TimeCraftersFragment {
         return root;
     }
 
-    private void populateConfigFiles() {
+    public void populateConfigFiles() {
         configsContainer.removeAllViews();
 
         int i = 0;
@@ -82,6 +82,7 @@ public class ConfigurationsFragment extends TimeCraftersFragment {
                 }
             });
 
+            final ConfigurationsFragment fragment = this;
             rename.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -89,7 +90,8 @@ public class ConfigurationsFragment extends TimeCraftersFragment {
                     Bundle bundle = new Bundle();
                     bundle.putString("config_name", configFile);
                     dialog.setArguments(bundle);
-                    dialog.show(getFragmentManager(), null);
+                    dialog.setTargetFragment(fragment, 0);
+                    dialog.show(getFragmentManager().beginTransaction(), "rename_configuration");
                 }
             });
 
