@@ -20,11 +20,16 @@ import org.timecrafters.TimeCraftersConfigurationTool.backend.Config;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Action;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Group;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Variable;
+import org.timecrafters.TimeCraftersConfigurationTool.dialogs.ConfirmationDialog;
 import org.timecrafters.TimeCraftersConfigurationTool.dialogs.VariableDialog;
+import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersDialog;
+import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersDialogRunnable;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersFragment;
 
 public class VariablesFragment extends TimeCraftersFragment {
     final private String TAG = "VariablesFragment";
+    final private String deleteActionKey = "delete_variable";
+
 
     private Config config;
     private LinearLayout container;
@@ -94,6 +99,34 @@ public class VariablesFragment extends TimeCraftersFragment {
                     bundle.putInt("variable_index", action.getVariables().indexOf(variable));
                     dialog.setArguments(bundle);
                     dialog.show(getFragmentManager(), "edit_variable");
+                }
+            });
+
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ConfirmationDialog dialog = new ConfirmationDialog();
+                    Bundle bundle = new Bundle();
+
+                    bundle.putString("message", "Delete variable " + variable.name + "?");
+                    bundle.putString("action", deleteActionKey);
+                    dialog.setArguments(bundle);
+                    final TimeCraftersDialogRunnable actionRunner = new TimeCraftersDialogRunnable() {
+                        @Override
+                        public void run(TimeCraftersDialog dialog) {
+                            action.getVariables().remove(variable);
+                            Backend.instance().configChanged();
+                            Backend.getStorage().remove(deleteActionKey);
+
+                            VariablesFragment fragment = (VariablesFragment) dialog.getFragmentManager().getPrimaryNavigationFragment();
+                            if (fragment != null) {
+                                fragment.populateVariables();
+                            }
+                        }
+                    };
+                    Backend.getStorage().put(deleteActionKey, actionRunner);
+
+                    dialog.show(getFragmentManager(), deleteActionKey);
                 }
             });
 

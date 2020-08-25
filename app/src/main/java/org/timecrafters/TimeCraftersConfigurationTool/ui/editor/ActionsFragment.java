@@ -24,9 +24,14 @@ import org.timecrafters.TimeCraftersConfigurationTool.backend.Config;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Action;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Group;
 import org.timecrafters.TimeCraftersConfigurationTool.dialogs.ActionDialog;
+import org.timecrafters.TimeCraftersConfigurationTool.dialogs.ConfirmationDialog;
+import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersDialog;
+import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersDialogRunnable;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersFragment;
 
 public class ActionsFragment extends TimeCraftersFragment {
+    final private String deleteActionKey = "delete_action";
+
     private Config config;
     private Group group;
     private LinearLayout container;
@@ -117,6 +122,34 @@ public class ActionsFragment extends TimeCraftersFragment {
                     bundle.putInt("action_index", group.getActions().indexOf(action));
                     dialog.setArguments(bundle);
                     dialog.show(getFragmentManager(), "edit_action");
+                }
+            });
+
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ConfirmationDialog dialog = new ConfirmationDialog();
+                    Bundle bundle = new Bundle();
+
+                    bundle.putString("message", "Delete action " + action.name + "?");
+                    bundle.putString("action", deleteActionKey);
+                    dialog.setArguments(bundle);
+                    final TimeCraftersDialogRunnable actionRunner = new TimeCraftersDialogRunnable() {
+                        @Override
+                        public void run(TimeCraftersDialog dialog) {
+                            group.getActions().remove(action);
+                            Backend.instance().configChanged();
+                            Backend.getStorage().remove(deleteActionKey);
+
+                            ActionsFragment fragment = (ActionsFragment) dialog.getFragmentManager().getPrimaryNavigationFragment();
+                            if (fragment != null) {
+                                fragment.populateActions();
+                            }
+                        }
+                    };
+                    Backend.getStorage().put(deleteActionKey, actionRunner);
+
+                    dialog.show(getFragmentManager(), deleteActionKey);
                 }
             });
 
