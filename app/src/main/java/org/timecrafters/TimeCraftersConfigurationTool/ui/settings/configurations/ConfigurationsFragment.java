@@ -35,7 +35,7 @@ public class ConfigurationsFragment extends TimeCraftersFragment {
         this.root = inflater.inflate(R.layout.fragment_configuration, container, false);
         final ScrollView scrollview = root.findViewById(R.id.scrollview);
         configsContainer = root.findViewById(R.id.container);
-        final FloatingActionButton actionButton = root.findViewById(R.id.actionButton);
+        final FloatingActionButton actionButton = root.findViewById(R.id.action_button);
 
         floatingActionButtonAutoHide(actionButton, scrollview);
         actionButton.setOnClickListener(new View.OnClickListener() {

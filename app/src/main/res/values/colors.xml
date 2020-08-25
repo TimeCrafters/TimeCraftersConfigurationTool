@@ -27,9 +27,9 @@
 
     <color name="dialogBackground">#ddd</color>
     <color name="dialogTitle">#fff</color>
-    <color name="dialogLabel">#222</color>
+    <color name="dialog_label">#222</color>
     <color name="dialogCloseColor">#222</color>
     <color name="dialogAlert">#f80</color>
-    <color name="dialogError">@color/colorDanger</color>
+    <color name="dialog_error">@color/colorDanger</color>
     <color name="dialogNotice">#080</color>
 </resources>

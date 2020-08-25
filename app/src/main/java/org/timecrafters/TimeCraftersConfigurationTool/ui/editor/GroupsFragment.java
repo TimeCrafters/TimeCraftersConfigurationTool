@@ -48,7 +48,7 @@ public class GroupsFragment extends TimeCraftersFragment {
         final View root = inflater.inflate(R.layout.fragment_groups, container, false);
         this.configName = root.findViewById(R.id.configuration_name);
         this.container = root.findViewById(R.id.container);
-        final FloatingActionButton actionButton = root.findViewById(R.id.actionButton);
+        final FloatingActionButton actionButton = root.findViewById(R.id.action_button);
         final ScrollView scrollView = root.findViewById(R.id.scrollview);
 
         actionButton.setOnClickListener(new View.OnClickListener() {
@@ -98,7 +98,7 @@ public class GroupsFragment extends TimeCraftersFragment {
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
                     bundle.putInt("group_index", config.getGroups().indexOf(group));
-                    Navigation.findNavController(v).navigate(R.id.actionsFragment, bundle);
+                    Navigation.findNavController(v).navigate(R.id.actions_fragment, bundle);
                 }
             });
 

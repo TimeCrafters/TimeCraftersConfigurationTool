@@ -20,8 +20,8 @@ public class PermissionsRequestDialog extends TimeCraftersDialog {
 
         View root = super.onCreateView(inflater, container, savedInstanceState);
 
-        ((TextView)root.findViewById(R.id.dialogTitle)).setText("Storage Permission Required");
-        LinearLayout view = root.findViewById(R.id.dialogContent);
+        ((TextView)root.findViewById(R.id.dialog_title)).setText("Storage Permission Required");
+        LinearLayout view = root.findViewById(R.id.dialog_content);
         view.addView(getLayoutInflater().inflate(R.layout.dialog_permission_request, null));
         ((TextView)view.findViewById(R.id.message)).setText("Permission is required to write to external storage:\n\n" + TAC.ROOT_PATH);
 

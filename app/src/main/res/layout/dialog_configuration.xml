@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/variable_name"
-        android:textColor="@color/dialogLabel" />
+        android:textColor="@color/dialog_label" />
 
     <EditText
         android:id="@+id/name"
@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/button_margin_left"
         android:layout_marginRight="@dimen/button_margin_right"
-        android:textColor="@color/dialogError"
+        android:textColor="@color/dialog_error"
         android:visibility="gone" />
 
     <LinearLayout

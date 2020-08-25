@@ -3,7 +3,6 @@ package org.timecrafters.TimeCraftersConfigurationTool.dialogs;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,10 +26,10 @@ public class ConfigurationDialog extends TimeCraftersDialog {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = super.onCreateView(inflater, container, savedInstanceState);
 
-        final LinearLayout view = root.findViewById(R.id.dialogContent);
+        final LinearLayout view = root.findViewById(R.id.dialog_content);
         view.addView(getLayoutInflater().inflate(R.layout.dialog_configuration, null));
 
-        final TextView title = root.findViewById(R.id.dialogTitle);
+        final TextView title = root.findViewById(R.id.dialog_title);
         final EditText name = view.findViewById(R.id.name);
         this.nameError = view.findViewById(R.id.name_error);
         final Button cancel = view.findViewById(R.id.cancel);
@@ -53,7 +52,7 @@ public class ConfigurationDialog extends TimeCraftersDialog {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                validated(name.getText().toString());
+                validated(name.getText().toString().trim());
             }
 
             @Override
@@ -72,7 +71,7 @@ public class ConfigurationDialog extends TimeCraftersDialog {
         mutate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String newConfigName = name.getText().toString();
+                final String newConfigName = name.getText().toString().trim();
 
                 if (newConfigName.equals(configName)) {
                     dismiss();

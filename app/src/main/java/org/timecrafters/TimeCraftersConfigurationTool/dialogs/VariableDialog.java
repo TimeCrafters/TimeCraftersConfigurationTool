@@ -2,7 +2,9 @@ package org.timecrafters.TimeCraftersConfigurationTool.dialogs;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.ContextThemeWrapper;
@@ -21,31 +23,20 @@ import android.widget.TextView;
 import org.timecrafters.TimeCraftersConfigurationTool.R;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Action;
+import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Group;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Variable;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersDialog;
+import org.timecrafters.TimeCraftersConfigurationTool.ui.editor.VariablesFragment;
 
 public class VariableDialog extends TimeCraftersDialog {
     final String TAG = "VariableDialog";
     private Action action;
     private Variable variable;
 
-    private TextView nameTextView, valueTextView;
     Button variableType;
     EditText variableName, variableValue;
     Switch variableValueBoolean;
-
-    public VariableDialog() {
-    }
-
-    public VariableDialog(Action action) {
-        this.action = action;
-    }
-
-    public VariableDialog(Variable variable, TextView nameTextView, TextView valueTextView) {
-        this.variable = variable;
-        this.nameTextView = nameTextView;
-        this.valueTextView = valueTextView;
-    }
+    TextView nameError, valueError;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,11 +44,22 @@ public class VariableDialog extends TimeCraftersDialog {
 
         View root = super.onCreateView(inflater, container, savedInstanceState);
 
-        final TextView title = root.findViewById(R.id.dialogTitle);
-        LinearLayout view = root.findViewById(R.id.dialogContent);
+        if (getArguments() != null) {
+            Group group = Backend.instance().getConfig().getGroups().get(getArguments().getInt("group_index"));
+            action = group.getActions().get(getArguments().getInt("action_index"));
+
+            if (getArguments().getInt("variable_index", -1) != -1) {
+                variable = action.getVariables().get(getArguments().getInt("variable_index"));
+            }
+        }
+
+        final TextView title = root.findViewById(R.id.dialog_title);
+        LinearLayout view = root.findViewById(R.id.dialog_content);
         view.addView(getLayoutInflater().inflate(R.layout.dialog_edit_variable, null));
-        variableName = view.findViewById(R.id.variableName);
-        variableType = view.findViewById(R.id.variableType);
+        variableName = view.findViewById(R.id.variable_name);
+        nameError = view.findViewById(R.id.name_error);
+        valueError = view.findViewById(R.id.value_error);
+        variableType = view.findViewById(R.id.variable_type);
         variableType.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,41 +106,133 @@ public class VariableDialog extends TimeCraftersDialog {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 styleSwitch(buttonView, isChecked);
+                validated(variableName.getText().toString().trim(), getValue());
+            }
+        });
+
+        variableName.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                validated(variableName.getText().toString().trim(), getValue());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        variableValue.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                validated(variableName.getText().toString().trim(), getValue());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
             }
         });
 
         mutateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String value = "" + variableType.getText().toString().substring(0, 1) + "x";
-                if (variableType.getText().toString().substring(0, 1).equals("B")) {
-                    if (variableValueBoolean.isChecked()) {
-                        value += "true";
+                String value = getValue();
+                final String variableNameValue = variableName.getText().toString().trim();
+
+                if (validated(variableNameValue, value)) {
+                    if (variable != null) {
+                        variable.name = variableNameValue;
+
+                        Log.d(TAG, "Value: " + value);
+                        variable.setValue(value);
                     } else {
-                        value += "false";
+                        Variable variable = new Variable(variableName.getText().toString(), value);
+                        action.getVariables().add(variable);
                     }
-                } else {
-                    value += variableValue.getText().toString();
+
+                    Backend.instance().configChanged();
+                    VariablesFragment fragment = (VariablesFragment) getFragmentManager().getPrimaryNavigationFragment();
+                    if (fragment != null) {
+                        fragment.populateVariables();
+                    }
+                    dismiss();
                 }
-
-                if (variable != null) {
-                    variable.name = variableName.getText().toString();
-
-                    Log.d(TAG, "Value: " + value);
-                    variable.setValue(value);
-                    nameTextView.setText(variable.name);
-                    valueTextView.setText(variable.value().toString());
-                } else {
-                    Variable variable = new Variable(variableName.getText().toString(), value);
-                    action.getVariables().add(variable);
-                }
-
-                Backend.instance().configChanged();
-                dismiss();
             }
         });
 
         return root;
+    }
+
+    private String getValue() {
+        String value = "" + variableType.getText().toString().substring(0, 1) + "x";
+
+        if (variableType.getText().toString().substring(0, 1).equals("B")) {
+            if (variableValueBoolean.isChecked()) {
+                value += "true";
+            } else {
+                value += "false";
+            }
+        } else {
+            value += variableValue.getText().toString();
+        }
+
+        return value;
+    }
+
+    private boolean validated(String name, String value) {
+        String nameMessage = "";
+        boolean nameUnique = true, okay = true;
+
+        for (Variable v : action.getVariables()) {
+            if (v.name.equals(name)) {
+                nameUnique = false;
+                break;
+            }
+        }
+
+        if (!nameUnique) {
+            nameMessage += "Name is not unique!";
+
+        } else if (name.length() <= 0) {
+            nameMessage += "Name cannot be blank!";
+
+        }
+
+        if (nameMessage.length() > 0) {
+            nameError.setVisibility(View.VISIBLE);
+            nameError.setText(nameMessage);
+            okay = false;
+        } else {
+            nameError.setVisibility(View.GONE);
+        }
+
+        String varType = Variable.typeOf(value);
+        String varValue = value.split("x", 2)[1];
+        String valueMessage = "";
+        if (!varType.equals("Boolean") && !varType.equals("String") && varValue.length() == 0) {
+            valueMessage += "Value cannot be blank for a numeric type!";
+        }
+
+        if (valueMessage.length() > 0) {
+            valueError.setVisibility(View.VISIBLE);
+            valueError.setText(valueMessage);
+            okay = false;
+        } else {
+            valueError.setVisibility(View.GONE);
+        }
+
+        return okay;
     }
 
     private void showVariableTypeMenu() {
@@ -187,6 +281,7 @@ public class VariableDialog extends TimeCraftersDialog {
         if (_type.equals("boolean")) {
             variableType.setText("Boolean");
             variableValue.setVisibility(View.GONE);
+            valueError.setVisibility(View.GONE);
             variableValueBoolean.setVisibility(View.VISIBLE);
 
         } else if (_type.equals("double")) {
@@ -220,6 +315,7 @@ public class VariableDialog extends TimeCraftersDialog {
         } else if (_type.equals("string")) {
             variableType.setText("String");
             variableValue.setVisibility(View.VISIBLE);
+            valueError.setVisibility(View.GONE);
             variableValueBoolean.setVisibility(View.GONE);
 
             variableValue.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PERSON_NAME);

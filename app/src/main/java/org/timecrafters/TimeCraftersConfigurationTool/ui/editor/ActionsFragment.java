@@ -36,7 +36,7 @@ public class ActionsFragment extends TimeCraftersFragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.fragment_actions, container, false);
         this.container = root.findViewById(R.id.container);
-        final FloatingActionButton actionButton = root.findViewById(R.id.actionButton);
+        final FloatingActionButton actionButton = root.findViewById(R.id.action_button);
         final ScrollView scrollView = root.findViewById(R.id.scrollview);
 
         this.config = Backend.instance().getConfig();
@@ -51,8 +51,11 @@ public class ActionsFragment extends TimeCraftersFragment {
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ActionDialog dialog = new ActionDialog(group);
-                dialog.show(getFragmentManager(), null);
+                ActionDialog dialog = new ActionDialog();
+                Bundle bundle = new Bundle();
+                bundle.putInt("group_index", getArguments().getInt("group_index"));
+                dialog.setArguments(bundle);
+                dialog.show(getFragmentManager(), "add_action");
             }
         });
 
@@ -95,7 +98,7 @@ public class ActionsFragment extends TimeCraftersFragment {
                     Bundle bundle = new Bundle();
                     bundle.putInt("group_index", getArguments().getInt("group_index"));
                     bundle.putInt("action_index", group.getActions().indexOf(action));
-                    Navigation.findNavController(v).navigate(R.id.variablesFragment, bundle);
+                    Navigation.findNavController(v).navigate(R.id.variables_fragment, bundle);
                 }
             });
 
@@ -108,8 +111,12 @@ public class ActionsFragment extends TimeCraftersFragment {
             rename.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    ActionDialog dialog = new ActionDialog(action, name, comment);
-                    dialog.show(getFragmentManager(), null);
+                    ActionDialog dialog = new ActionDialog();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("group_index", getArguments().getInt("group_index"));
+                    bundle.putInt("action_index", group.getActions().indexOf(action));
+                    dialog.setArguments(bundle);
+                    dialog.show(getFragmentManager(), "edit_action");
                 }
             });
 

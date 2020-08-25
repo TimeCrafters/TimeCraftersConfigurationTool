@@ -1,7 +1,6 @@
 package org.timecrafters.TimeCraftersConfigurationTool.ui.editor;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +35,7 @@ public class VariablesFragment extends TimeCraftersFragment {
                              ViewGroup container, Bundle savedInstanceState) {
         final View root = inflater.inflate(R.layout.fragment_variables, container, false);
         this.container = root.findViewById(R.id.container);
-        final FloatingActionButton actionButton = root.findViewById(R.id.actionButton);
+        final FloatingActionButton actionButton = root.findViewById(R.id.action_button);
         final ScrollView scrollView = root.findViewById(R.id.scrollview);
 
         this.config = Backend.instance().getConfig();
@@ -53,8 +52,12 @@ public class VariablesFragment extends TimeCraftersFragment {
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                VariableDialog dialog = new VariableDialog(action);
-                dialog.show(getFragmentManager(), null);
+                VariableDialog dialog = new VariableDialog();
+                Bundle bundle = new Bundle();
+                bundle.putInt("group_index", getArguments().getInt("group_index"));
+                bundle.putInt("action_index", getArguments().getInt("action_index"));
+                dialog.setArguments(bundle);
+                dialog.show(getFragmentManager(), "add_variable");
             }
         });
 
@@ -84,8 +87,13 @@ public class VariablesFragment extends TimeCraftersFragment {
             rename.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    VariableDialog dialog = new VariableDialog(variable, name, value);
-                    dialog.show(getFragmentManager(), null);
+                    VariableDialog dialog = new VariableDialog();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("group_index", getArguments().getInt("group_index"));
+                    bundle.putInt("action_index", getArguments().getInt("action_index"));
+                    bundle.putInt("variable_index", action.getVariables().indexOf(variable));
+                    dialog.setArguments(bundle);
+                    dialog.show(getFragmentManager(), "edit_variable");
                 }
             });
 

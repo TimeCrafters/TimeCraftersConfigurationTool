@@ -42,16 +42,16 @@ public class ConfirmationDialog extends TimeCraftersDialog {
             }
         }
 
-        final TextView title = root.findViewById(R.id.dialogTitle);
+        final TextView title = root.findViewById(R.id.dialog_title);
         final ConstraintLayout titlebar = root.findViewById(R.id.titlebar);
-        final LinearLayout view = root.findViewById(R.id.dialogContent);
+        final LinearLayout view = root.findViewById(R.id.dialog_content);
         view.addView(getLayoutInflater().inflate(R.layout.dialog_confirmation, null));
         final TextView messageView = root.findViewById(R.id.message);
         final Button cancel = root.findViewById(R.id.cancel);
         final Button confirm = root.findViewById(R.id.confirm);
 
         if (getArguments() != null && getArguments().getBoolean("extreme_danger", false)) {
-            titlebar.setBackgroundColor(getResources().getColor(R.color.dialogError));
+            titlebar.setBackgroundColor(getResources().getColor(R.color.dialog_error));
             getDialog().getWindow().setDimAmount(0.8f);
             cancel.setTypeface(cancel.getTypeface(), Typeface.BOLD);
         } else {

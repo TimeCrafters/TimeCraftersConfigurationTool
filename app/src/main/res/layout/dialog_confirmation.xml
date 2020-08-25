@@ -15,7 +15,7 @@
         android:layout_marginRight="@dimen/button_margin_right"
         android:gravity="center"
         android:text="TextView"
-        android:textColor="@color/dialogLabel"
+        android:textColor="@color/dialog_label"
         android:textSize="18sp"
         android:textStyle="bold" />
 

@@ -26,9 +26,9 @@ public class ServerDialog extends TimeCraftersDialog {
         }
 
 
-        final TextView title = root.findViewById(R.id.dialogTitle);
+        final TextView title = root.findViewById(R.id.dialog_title);
         final ConstraintLayout titlebar = root.findViewById(R.id.titlebar);
-        final LinearLayout view = root.findViewById(R.id.dialogContent);
+        final LinearLayout view = root.findViewById(R.id.dialog_content);
         view.addView(getLayoutInflater().inflate(R.layout.dialog_server, null));
         new ServerStatsSyncHandler(view, 1_000);
 

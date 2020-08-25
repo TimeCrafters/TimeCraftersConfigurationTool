@@ -18,7 +18,7 @@
         tools:layout="@layout/fragment_groups" >
         <action
             android:id="@+id/action_navigation_editor_to_actionsFragment"
-            app:destination="@id/actionsFragment" />
+            app:destination="@id/actions_fragment" />
     </fragment>
 
     <fragment
@@ -39,15 +39,15 @@
         android:label="@string/title_search"
         tools:layout="@layout/fragment_search" />
     <fragment
-        android:id="@+id/actionsFragment"
+        android:id="@+id/actions_fragment"
         android:name="org.timecrafters.TimeCraftersConfigurationTool.ui.editor.ActionsFragment"
         android:label="Actions" >
         <action
             android:id="@+id/action_actionsFragment_to_variablesFragment"
-            app:destination="@id/variablesFragment" />
+            app:destination="@id/variables_fragment" />
     </fragment>
     <fragment
-        android:id="@+id/variablesFragment"
+        android:id="@+id/variables_fragment"
         android:name="org.timecrafters.TimeCraftersConfigurationTool.ui.editor.VariablesFragment"
         android:label="Variables" />
     <fragment
