@@ -1,10 +1,18 @@
 package org.timecrafters.TimeCraftersConfigurationTool.backend;
 
+import android.content.Context;
+import android.media.AudioAttributes;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.SoundPool;
+import android.net.Uri;
+import android.os.Build;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import org.timecrafters.TimeCraftersConfigurationTool.R;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Action;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Configuration;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Group;
@@ -47,12 +55,15 @@ public class Backend {
     private static final String TAG = "Backend";
     static private HashMap<String, Object> storage = new HashMap<>();
     static private Backend instance;
+    public Context applicationContext;
     private TACNET tacnet;
     private Server server;
     private Exception lastServerError;
     private Config config;
     private Settings settings;
     private boolean configChanged, settingsChanged;
+    private MediaPlayer mediaPlayer;
+    private SoundPool soundPool;
 
     public static HashMap<String, Object> getStorage() {
         return storage;
@@ -347,6 +358,44 @@ public class Backend {
 
         if (!configsPath.exists()) {
             configsPath.mkdir();
+        }
+    }
+
+    public void startErrorSound(Context context) {
+        if (isPlayingErrorSound()) {
+            return;
+        }
+
+        mediaPlayer = new MediaPlayer();
+        try {
+            mediaPlayer.setDataSource(context, Uri.parse("android.resource://" + context.getPackageName() + "/" + R.raw.error_alarm));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+            mediaPlayer.setAudioAttributes(new AudioAttributes.Builder()
+                    .setUsage(AudioAttributes.USAGE_ALARM)
+                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                    .build());
+            } else {
+                mediaPlayer.setAudioStreamType(AudioManager.STREAM_ALARM);
+            }
+
+            mediaPlayer.prepare();
+            mediaPlayer.start();
+            mediaPlayer.setLooping(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public boolean isPlayingErrorSound() {
+        return mediaPlayer != null && mediaPlayer.isPlaying();
+    }
+
+    public void stopErrorSound() {
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
         }
     }
 }

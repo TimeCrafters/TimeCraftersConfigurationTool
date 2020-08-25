@@ -72,6 +72,8 @@ public class TACNETFragment extends TimeCraftersFragment {
 //                ConnectDialog dialog = new ConnectDialog();
 //                dialog.show(getFragmentManager(), null);
                 Backend.instance().saveSettings();
+
+                Backend.instance().tacnet().connect(hostname.getText().toString(), Integer.parseInt(port.getText().toString()));
             }
         });
 

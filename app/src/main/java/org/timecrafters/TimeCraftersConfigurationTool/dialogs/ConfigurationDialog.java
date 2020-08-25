@@ -81,6 +81,14 @@ public class ConfigurationDialog extends TimeCraftersDialog {
                 if (validated(newConfigName)) {
                     if (configName != null) {
                         Backend.instance().moveConfig(configName, newConfigName);
+
+                        // If config being renamed is the active config then update Backend to use
+                        // the correct config name/file, and save settings.
+                        if (Backend.instance().getSettings().config.equals(configName)) {
+                            Backend.instance().loadConfig(newConfigName);
+                            Backend.instance().getSettings().config = newConfigName;
+                            Backend.instance().saveSettings();
+                        }
                     } else {
                         Backend.instance().writeNewConfig(newConfigName);
                     }

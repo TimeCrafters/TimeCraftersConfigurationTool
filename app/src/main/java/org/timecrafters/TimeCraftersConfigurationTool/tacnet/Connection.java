@@ -37,7 +37,7 @@ public class Connection {
     };
   }
 
-  public void connect(final Runnable callback) {
+  public void connect(final Runnable errorCallback) {
     if (client != null) {
       return;
     }
@@ -62,7 +62,7 @@ public class Connection {
           socketError = true;
           lastSocketError = e.getMessage();
 
-          callback.run();
+          errorCallback.run();
 
           Log.e(TAG, e.toString());
         }

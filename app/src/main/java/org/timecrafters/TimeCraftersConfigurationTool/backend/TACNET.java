@@ -1,6 +1,7 @@
 package org.timecrafters.TimeCraftersConfigurationTool.backend;
 
 import android.os.SystemClock;
+import android.util.Log;
 
 import org.timecrafters.TimeCraftersConfigurationTool.tacnet.Client;
 import org.timecrafters.TimeCraftersConfigurationTool.tacnet.Connection;
@@ -8,6 +9,7 @@ import org.timecrafters.TimeCraftersConfigurationTool.tacnet.Connection;
 import java.io.IOException;
 
 public class TACNET {
+    private final static String TAG = "TACNET|TACNET";
     public static final String DEFAULT_HOSTNAME = "192.168.49.1";
     public static final int DEFAULT_PORT = 8962;
 
@@ -29,7 +31,20 @@ public class TACNET {
         }
 
         connection = new Connection(hostname, port);
-        connection.connect(null);
+        Backend.instance().stopErrorSound();
+
+        connection.connect(new Runnable() {
+            @Override
+            public void run() {
+                Log.d(TAG, "run: " + connection.lastError());
+                Backend.instance().startErrorSound(Backend.instance().applicationContext);
+                try {
+                    connection.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     public Status status() {
