@@ -3,32 +3,57 @@ package org.timecrafters.TimeCraftersConfigurationTool.ui.tacnet;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import org.timecrafters.TimeCraftersConfigurationTool.R;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
+import org.timecrafters.TimeCraftersConfigurationTool.backend.TACNET;
 import org.timecrafters.TimeCraftersConfigurationTool.dialogs.ServerDialog;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersFragment;
+import org.timecrafters.TimeCraftersConfigurationTool.tacnet.support.ConnectionStatsSyncHandler;
+import org.timecrafters.TimeCraftersConfigurationTool.tacnet.support.ServerStatsSyncHandler;
 
-public class TACNETFragment extends TimeCraftersFragment {
+public class TACNETHostFragment extends TimeCraftersFragment {
 
     private static final String TAG = "TACNETFragment";
-    private TACNETViewModel TACNETViewModel;
+    private ConnectionStatsSyncHandler connectionStatsSyncHandler;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        TACNETViewModel =
-                ViewModelProviders.of(this).get(TACNETViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_tacnet, container, false);
+                             ViewGroup viewGroup, Bundle savedInstanceState) {
+        final View root = inflater.inflate(R.layout.fragment_tacnet_host, viewGroup, false);
+        final LinearLayout container = (LinearLayout) root;
+
+
+        if (Backend.instance().tacnet().status() != TACNET.Status.NOT_CONNECTED) {
+            inflateTACNETConnectionStatus(container);
+        } else {
+            inflateTACNET(container);
+        }
+
+        return root;
+    }
+
+    private void inflateTACNET(final LinearLayout container) {
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.title_tacnet);
+        final ConstraintLayout root = (ConstraintLayout) getLayoutInflater().inflate(R.layout.fragment_tacnet, null);
+        container.removeAllViews();
+        container.addView(root);
+
         final EditText hostname = root.findViewById(R.id.hostname);
         final EditText port = root.findViewById(R.id.port);
 
@@ -69,11 +94,12 @@ public class TACNETFragment extends TimeCraftersFragment {
         connectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                ConnectDialog dialog = new ConnectDialog();
-//                dialog.show(getFragmentManager(), null);
                 Backend.instance().saveSettings();
 
                 Backend.instance().tacnet().connect(hostname.getText().toString(), Integer.parseInt(port.getText().toString()));
+
+                root.removeAllViews();
+                inflateTACNETConnectionStatus(container);
             }
         });
 
@@ -84,13 +110,37 @@ public class TACNETFragment extends TimeCraftersFragment {
                 dialog.show(getFragmentManager(), null);
             }
         });
+    }
 
-        TACNETViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+    private void inflateTACNETConnectionStatus(final LinearLayout container) {
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.title_tacnet_connection_status);
+        final ConstraintLayout root = (ConstraintLayout) getLayoutInflater().inflate(R.layout.fragment_tacnet_connection_status, null);
+        container.removeAllViews();
+        container.addView(root);
+
+        connectionStatsSyncHandler = new ConnectionStatsSyncHandler(root, 1_000);
+
+        Button disconnect = root.findViewById(R.id.tacnet_disconnect);
+        disconnect.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onChanged(@Nullable String s) {
+            public void onClick(View v) {
+                Backend.instance().tacnet().close();
+                Backend.instance().stopErrorSound();
+                connectionStatsSyncHandler.stop();
+
+                inflateTACNET(container);
             }
         });
+    }
 
-        return root;
+    @Override
+    public void onDetach() {
+        super.onDetach();
+
+        if (connectionStatsSyncHandler != null) {
+            Log.d(TAG, "onDetach: stopping sync handler");
+            connectionStatsSyncHandler.stop();
+            connectionStatsSyncHandler = null;
+        }
     }
 }

@@ -36,6 +36,9 @@ public class Client {
 
   private String TAG = "TACNET|Client";
 
+  private boolean socketError = false;
+  private String lastSocketError;
+
   public Client() {
     this.uuid = (UUID.randomUUID()).toString();
 
@@ -90,7 +93,7 @@ public class Client {
             }
 
           } catch (IOException e) {
-            Log.e(TAG, "Read error: " + e.getMessage());
+            Log.e(TAG, "Read error: " + e.getLocalizedMessage());
           }
 
           try {
@@ -123,11 +126,13 @@ public class Client {
                 itr.remove();
 
               } catch (IOException e) {
-                Log.e(TAG, "Write error: " + e.getMessage());
+                Log.e(TAG, "Write error: " + e.getLocalizedMessage());
+                socketError = true;
+                lastSocketError = e.getLocalizedMessage();
                 try {
                   socket.close();
                 } catch (IOException k) {
-                  Log.e(TAG, "Failed to close socket: " + e.getMessage());
+                  Log.e(TAG, "Failed to close socket: " + e.getLocalizedMessage());
                 }
               }
             }
@@ -222,6 +227,13 @@ public class Client {
   public int getPacketsReceived() { return packetsReceived; }
   public long getDataSent() { return dataSent; }
   public long getDataReceived() { return dataReceived; }
+
+  public boolean socketError() {
+    return socketError;
+  }
+  public String lastSocketError() {
+    return lastSocketError;
+  }
 
   public void flush() throws IOException {
     this.bufferedWriter.flush();

@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">TimeCraftersConfigurationTool</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">TimeCrafters Configuration Tool</string>
     <string name="title_editor">Editor</string>
     <string name="title_search">Search</string>
     <string name="title_settings">Settings</string>
     <string name="title_tacnet">TACNET</string>
+    <string name="title_tacnet_connection_status">TACNET Connection Status</string>
 
     <string name="tacnet_hostname">Hostname</string>
     <string name="tacnet_port">Port</string>
@@ -36,4 +36,8 @@
     <string name="warning_no_config_active">No active configuration set</string>
     <string name="tacnet_stop_server">Stop Server</string>
     <string name="tacnet_server_status">Server Status</string>
+    <string name="tacnet_disconnect">Disconnect</string>
+    <string name="tacnet_connected">Connected</string>
+    <string name="tacnet_connecting">Connecting...</string>
+    <string name="tacnet_not_connected">Not Connected</string>
 </resources>

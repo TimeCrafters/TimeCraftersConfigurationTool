@@ -38,7 +38,6 @@ public class ServerDialog extends TimeCraftersDialog {
         stopServer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Halt server
                 Backend.instance().stopServer();
                 dismiss();
             }

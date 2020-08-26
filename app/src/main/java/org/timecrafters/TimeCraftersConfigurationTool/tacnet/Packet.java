@@ -20,6 +20,10 @@ public class Packet {
 
         DOWNLOAD_CONFIG(10),
         UPLOAD_CONFIG(11),
+        LIST_CONFIGS(12),
+        ADD_CONFIG(13),
+        UPDATE_CONFIG(14),
+        DELETE_CONFIG(15),
 
         ADD_GROUP(20),
         UPDATE_GROUP(21),

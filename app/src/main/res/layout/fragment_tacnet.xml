@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF"
-    tools:context=".ui.tacnet.TACNETFragment">
+    tools:context=".ui.tacnet.TACNETHostFragment">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -74,6 +73,7 @@
                     android:id="@+id/tacnet_connect"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dialog_button_margin"
                     android:text="@string/tacnet_connect" />
             </LinearLayout>
 

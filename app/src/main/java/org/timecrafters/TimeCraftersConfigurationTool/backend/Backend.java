@@ -111,6 +111,7 @@ public class Backend {
         if (server != null) {
             try {
                 server.stop();
+                server = null;
             } catch (IOException error) {
                 lastServerError = error;
             }

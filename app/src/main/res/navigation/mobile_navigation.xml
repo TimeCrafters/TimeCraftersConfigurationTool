@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_editor">
+    app:startDestination="@id/navigation_editor">
 
     <fragment
         android:id="@+id/navigation_tacnet"
-        android:name="org.timecrafters.TimeCraftersConfigurationTool.ui.tacnet.TACNETFragment"
+        android:name="org.timecrafters.TimeCraftersConfigurationTool.ui.tacnet.TACNETHostFragment"
         android:label="@string/title_tacnet"
         tools:layout="@layout/fragment_tacnet" />
 
@@ -28,10 +28,10 @@
         tools:layout="@layout/fragment_settings" >
         <action
             android:id="@+id/action_navigation_settings_to_configurationsFragment"
-            app:destination="@id/configurationsFragment" />
+            app:destination="@id/configurations_fragment" />
         <action
             android:id="@+id/action_navigation_settings_to_presetsFragment"
-            app:destination="@id/presetsFragment" />
+            app:destination="@id/presets_fragment" />
     </fragment>
     <fragment
         android:id="@+id/navigation_search"
@@ -51,11 +51,11 @@
         android:name="org.timecrafters.TimeCraftersConfigurationTool.ui.editor.VariablesFragment"
         android:label="Variables" />
     <fragment
-        android:id="@+id/configurationsFragment"
+        android:id="@+id/configurations_fragment"
         android:name="org.timecrafters.TimeCraftersConfigurationTool.ui.settings.configurations.ConfigurationsFragment"
-        android:label="Manage Configurations" />
+        android:label="@string/settings_manage_configurations" />
     <fragment
-        android:id="@+id/presetsFragment"
+        android:id="@+id/presets_fragment"
         android:name="org.timecrafters.TimeCraftersConfigurationTool.ui.settings.presets.PresetsFragment"
-        android:label="Manage Presets" />
+        android:label="@string/settings_manage_presets" />
 </navigation>

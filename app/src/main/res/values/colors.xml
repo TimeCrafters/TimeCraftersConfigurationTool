@@ -6,6 +6,8 @@
     <color name="colorSecondary">#006000</color>
     <color name="colorTertiary">#00d000</color>
 
+    <color name="text_color">#fff</color>
+
     <color name="colorDanger">#800</color>
     <color name="buttonDangerHover">#600</color>
     <color name="buttonDangerActive">#c00</color>

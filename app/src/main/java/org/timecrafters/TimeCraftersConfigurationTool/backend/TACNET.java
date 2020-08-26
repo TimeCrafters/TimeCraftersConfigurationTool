@@ -31,29 +31,23 @@ public class TACNET {
         }
 
         connection = new Connection(hostname, port);
-        Backend.instance().stopErrorSound();
 
         connection.connect(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "run: " + connection.lastError());
+                Log.d(TAG, "run: " + connection.lastSocketError());
                 Backend.instance().startErrorSound(Backend.instance().applicationContext);
-                try {
-                    connection.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
             }
         });
     }
 
     public Status status() {
-        if (isConnected()) {
-            return Status.CONNECTED;
-        } else if (connection != null && !connection.socketError()) {
+        if (isConnecting()) {
             return Status.CONNECTING;
-        } else if (connection != null && connection.socketError()) {
+        } else if (isConnectionError()) {
             return Status.CONNECTION_ERROR;
+        } else if (isConnected()) {
+            return Status.CONNECTED;
         } else {
             return Status.NOT_CONNECTED;
         }
@@ -61,6 +55,14 @@ public class TACNET {
 
     public boolean isConnected() {
         return connection != null && connection.isConnected();
+    }
+
+    public boolean isConnecting() {
+        return connection != null && !connection.isConnected() && !connection.socketError();
+    }
+
+    public boolean isConnectionError() {
+        return connection != null && connection.socketError();
     }
 
     public void close() {
@@ -79,6 +81,10 @@ public class TACNET {
         } else {
             return null;
         }
+    }
+
+    public Connection getConnection() {
+        return connection;
     }
 
     public void puts(String message) {

@@ -60,7 +60,7 @@ public class Connection {
           }
         } catch (IOException e) {
           socketError = true;
-          lastSocketError = e.getMessage();
+          lastSocketError = e.getLocalizedMessage();
 
           errorCallback.run();
 
@@ -114,10 +114,10 @@ public class Connection {
     return this.client != null && this.client.isConnected();
   }
   public boolean socketError() {
-    return socketError;
+    return socketError ? socketError : client.socketError();
   }
-  public String lastError() {
-    return lastSocketError;
+  public String lastSocketError() {
+    return lastSocketError != null ? lastSocketError : client.lastSocketError();
   }
 
   public void close() throws IOException {
