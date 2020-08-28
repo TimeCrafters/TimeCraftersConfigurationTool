@@ -111,6 +111,12 @@ public class ConfigurationsFragment extends TimeCraftersFragment {
                             Backend.instance().deleteConfig(configFile);
                             Backend.getStorage().remove(deleteActionKey);
 
+                            if (Backend.instance().getConfig().getName().equals(configFile)) {
+                                Backend.instance().getSettings().config = "";
+                                Backend.instance().saveSettings();
+                                Backend.instance().loadConfig("");
+                            }
+
                             ConfigurationsFragment fragment = (ConfigurationsFragment) dialog.getFragmentManager().getPrimaryNavigationFragment();
                             if (fragment != null) {
                                 fragment.populateConfigFiles();

@@ -63,7 +63,6 @@ public class Backend {
     private Settings settings;
     private boolean configChanged, settingsChanged;
     private MediaPlayer mediaPlayer;
-    private SoundPool soundPool;
 
     public static HashMap<String, Object> getStorage() {
         return storage;
@@ -145,6 +144,11 @@ public class Backend {
     }
 
     public void loadConfig(String name) {
+        if (name.equals("")) {
+            config = null;
+            return;
+        }
+
         String path = configPath(name);
         File file = new File(path);
 
