@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class Packet {
     final static public String PROTOCOL_VERSION = "1";
-    final static public String PROTOCOL_HEADER_SEPERATOR = "|";
+    final static public String PROTOCOL_SEPERATOR = "|";
     final static public String PROTOCOL_HEARTBEAT = "heartbeat";
     private static final String TAG = "TACNET|Packet";
 
@@ -21,9 +21,10 @@ public class Packet {
         DOWNLOAD_CONFIG(10),
         UPLOAD_CONFIG(11),
         LIST_CONFIGS(12),
-        ADD_CONFIG(13),
-        UPDATE_CONFIG(14),
-        DELETE_CONFIG(15),
+        SELECT_CONFIG(13),
+        ADD_CONFIG(14),
+        UPDATE_CONFIG(15),
+        DELETE_CONFIG(16),
 
         ADD_GROUP(20),
         UPDATE_GROUP(21),
@@ -70,7 +71,7 @@ public class Packet {
         String[] slice = message.split("\\|", 4);
 
         if (slice.length < 4) {
-            Log.i(TAG, "Failed to split packet along first 4 " + PROTOCOL_HEADER_SEPERATOR + ". Raw return: " + Arrays.toString(slice));
+            Log.i(TAG, "Failed to split packet along first 4 " + PROTOCOL_SEPERATOR + ". Raw return: " + Arrays.toString(slice));
             return null;
         }
 
@@ -108,7 +109,7 @@ public class Packet {
             return true;
         }
 
-        String[] parts = rawMessage.split(PROTOCOL_HEADER_SEPERATOR);
+        String[] parts = rawMessage.split(PROTOCOL_SEPERATOR);
 
         return parts[0].equals(PROTOCOL_VERSION) &&
                 isPacketTypeValid( Integer.parseInt(parts[1]));
@@ -121,11 +122,11 @@ public class Packet {
     public String encodeHeader() {
         String string = "";
         string += PROTOCOL_VERSION;
-        string += PROTOCOL_HEADER_SEPERATOR;
+        string += PROTOCOL_SEPERATOR;
         string += packetType.getId();
-        string += PROTOCOL_HEADER_SEPERATOR;
+        string += PROTOCOL_SEPERATOR;
         string += contentLength;
-        string += PROTOCOL_HEADER_SEPERATOR;
+        string += PROTOCOL_SEPERATOR;
         return string;
     }
 

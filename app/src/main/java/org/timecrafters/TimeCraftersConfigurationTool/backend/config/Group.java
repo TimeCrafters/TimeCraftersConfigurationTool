@@ -11,6 +11,16 @@ public class Group {
         this.actions = actions;
     }
 
+    public static boolean nameIsUnique(ArrayList<Group> groups, String name) {
+        for (Group group: groups) {
+            if (group.name.equals(name)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     public ArrayList<Action> getActions() {
         return actions;
     }

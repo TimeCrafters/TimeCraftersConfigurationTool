@@ -78,13 +78,10 @@ public class Server {
         client.close("Too many clients!");
 
       } else {
-//        Writer.writeJSON(Writer.getBackupConfigFilePath(), AppSync.getDataStructs());
-
         this.activeClient = client;
-//        AppSync.getMainActivity().clientConnected();
 
         activeClient.puts(PacketHandler.packetHandShake( activeClient.uuid() ).toString());
-//        activeClient.puts(PacketHandler.packetDumpConfig( Reader.rawConfigFile() ).toString());
+        activeClient.puts(PacketHandler.packetListConfigs().toString());
 
         Log.i(TAG, "Client connected!");
 

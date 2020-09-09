@@ -11,7 +11,9 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonSyntaxException;
 
+import org.json.JSONException;
 import org.timecrafters.TimeCraftersConfigurationTool.R;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Action;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Configuration;
@@ -32,6 +34,7 @@ import org.timecrafters.TimeCraftersConfigurationTool.serializers.SettingsDeseri
 import org.timecrafters.TimeCraftersConfigurationTool.serializers.SettingsSerializer;
 import org.timecrafters.TimeCraftersConfigurationTool.serializers.VariableDeserializer;
 import org.timecrafters.TimeCraftersConfigurationTool.serializers.VariableSerializer;
+import org.timecrafters.TimeCraftersConfigurationTool.tacnet.PacketHandler;
 import org.timecrafters.TimeCraftersConfigurationTool.tacnet.Server;
 
 import java.io.BufferedReader;
@@ -135,6 +138,14 @@ public class Backend {
         configChanged = true;
 
         saveConfig();
+
+        /* Automatically upload whole config to server
+        *  TODO: Implement a more atomic remote config updating
+        *  */
+        if (config != null && tacnet.isConnected()) {
+            String json = gsonForConfig().toJson(config);
+            tacnet.puts(PacketHandler.packetUploadConfig(config.getName(), json).toString());
+        }
     }
 
     public boolean hasConfigChanged() { return configChanged; }
@@ -155,6 +166,34 @@ public class Backend {
         if (file.exists() && file.isFile()) {
             config = gsonForConfig().fromJson(readFromFile(path), Config.class);
             config.setName(name);
+        }
+    }
+
+    public Config loadConfigWithoutMutatingBackend(String name) {
+        if (name.equals("")) {
+            return null;
+        }
+
+        String path = configPath(name);
+        File file = new File(path);
+
+        if (file.exists() && file.isFile()) {
+            Config config = gsonForConfig().fromJson(readFromFile(path), Config.class);
+            config.setName(name);
+
+            return config;
+        }
+
+        return null;
+    }
+
+    public boolean isConfigValid(String json) {
+        try {
+            gsonForConfig().fromJson(json, Config.class);
+
+            return true;
+        } catch (JsonSyntaxException ignored) {
+            return false;
         }
     }
 
@@ -191,19 +230,6 @@ public class Backend {
         File file = new File(configPath(name));
 
         return file.delete();
-    }
-
-    public void uploadConfig() {
-        if (config != null && tacnet.isConnected()) {
-            String json = "";
-//            tacnet.puts(PacketHandler.packetUploadConfig(json));
-        }
-    }
-
-    public void downloadConfig() {
-        if (config != null && tacnet.isConnected()) {
-//            tacnet.puts(PacketHandler.packetDownloadConfig());
-        }
     }
 
     public void writeNewConfig(String name) {
