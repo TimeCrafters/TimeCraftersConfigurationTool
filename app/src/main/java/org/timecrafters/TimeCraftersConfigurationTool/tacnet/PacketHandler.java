@@ -110,9 +110,11 @@ public class PacketHandler {
 
         final String path = TAC.CONFIGS_PATH + File.separator + configName + ".json";
 
-        Log.i(TAG, "Got valid json: " + json);
-
         Backend.instance().writeToFile(path, json);
+
+        if (Backend.instance().getConfig().getName().equals(configName)) {
+            Backend.instance().loadConfig(configName);
+        }
     }
 
     private void handleDownloadConfig(Packet packet) {
