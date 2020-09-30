@@ -92,6 +92,7 @@ public class ActionsFragment extends TimeCraftersFragment {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     action.enabled = isChecked;
+                    Backend.instance().configChanged();
 
                     styleSwitch(buttonView, isChecked);
                 }
