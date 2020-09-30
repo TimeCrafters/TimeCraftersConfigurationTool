@@ -60,12 +60,13 @@ public class GroupsFragment extends TimeCraftersFragment {
         });
 
         floatingActionButtonAutoHide(actionButton, scrollView);
-        if (Backend.instance().getConfig() == null) {
-            actionButton.hide();
-        }
+        if (Backend.instance() != null) {
+            if (Backend.instance().getConfig() == null) {
+                actionButton.hide();
+            }
 
-        if (Backend.instance() != null)
             this.config = Backend.instance().getConfig();
+        }
 
         if (config != null) {
             configName.setVisibility(View.GONE);

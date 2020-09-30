@@ -45,9 +45,9 @@ public class MainActivity extends AppCompatActivity {
             if (Backend.instance() == null) {
                 new Backend();
             }
-        }
 
-        Backend.instance().applicationContext = getApplicationContext();
+            Backend.instance().applicationContext = getApplicationContext();
+        }
     }
 
     @Override
