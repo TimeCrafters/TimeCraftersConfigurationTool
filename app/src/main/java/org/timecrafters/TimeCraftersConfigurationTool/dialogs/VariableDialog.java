@@ -201,7 +201,7 @@ public class VariableDialog extends TimeCraftersDialog {
             }
         }
 
-        if (!nameUnique) {
+        if (!nameUnique && variable == null) {
             nameMessage += "Name is not unique!";
 
         } else if (name.length() <= 0) {

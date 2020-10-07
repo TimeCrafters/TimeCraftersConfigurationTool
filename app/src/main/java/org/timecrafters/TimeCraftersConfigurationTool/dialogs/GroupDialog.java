@@ -119,7 +119,7 @@ public class GroupDialog extends TimeCraftersDialog {
             }
         }
 
-        if (!nameUnique) {
+        if (!nameUnique && group == null) {
             message += "Name is not unique!";
 
         } else if (name.length() <= 0) {
