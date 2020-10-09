@@ -224,6 +224,10 @@ public class VariableDialog extends TimeCraftersDialog {
             valueMessage += "Value cannot be blank for a numeric type!";
         }
 
+        if ((varType.equals("Integer") || varType.equals("Long"))  && varValue.contains(".")) {
+            valueMessage += "Integer and Long cannot have decimal value!";
+        }
+
         if (valueMessage.length() > 0) {
             valueError.setVisibility(View.VISIBLE);
             valueError.setText(valueMessage);
@@ -289,28 +293,28 @@ public class VariableDialog extends TimeCraftersDialog {
             variableValue.setVisibility(View.VISIBLE);
             variableValueBoolean.setVisibility(View.GONE);
 
-            variableValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            variableValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
 
         } else if (_type.equals("float")) {
             variableType.setText("Float");
             variableValue.setVisibility(View.VISIBLE);
             variableValueBoolean.setVisibility(View.GONE);
 
-            variableValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
+            variableValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
 
         } else if (_type.equals("long")){
             variableType.setText("Long");
             variableValue.setVisibility(View.VISIBLE);
             variableValueBoolean.setVisibility(View.GONE);
 
-            variableValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
+            variableValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
 
         } else if (_type.equals("integer")) {
             variableType.setText("Integer");
             variableValue.setVisibility(View.VISIBLE);
             variableValueBoolean.setVisibility(View.GONE);
 
-            variableValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
+            variableValue.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL | InputType.TYPE_NUMBER_FLAG_SIGNED);
 
         } else if (_type.equals("string")) {
             variableType.setText("String");
