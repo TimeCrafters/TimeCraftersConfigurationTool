@@ -1,15 +1,21 @@
 package org.timecrafters.TimeCraftersConfigurationTool.ui.editor;
 
+import android.content.Context;
 import android.os.Bundle;
+import android.view.ContextMenu;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ScrollView;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +31,7 @@ import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Action;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Group;
 import org.timecrafters.TimeCraftersConfigurationTool.dialogs.ActionDialog;
 import org.timecrafters.TimeCraftersConfigurationTool.dialogs.ConfirmationDialog;
+import org.timecrafters.TimeCraftersConfigurationTool.dialogs.PresetDialog;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersDialog;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersDialogRunnable;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersFragment;
@@ -97,6 +104,21 @@ public class ActionsFragment extends TimeCraftersFragment {
                     styleSwitch(buttonView, isChecked);
                 }
             });
+            final int index = i;
+            name.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    showContextMenu(name, index);
+
+                    return true;
+                }
+            });
+            name.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+                @Override
+                public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                    getActivity().getMenuInflater().inflate(R.menu.action_extras_menu, menu);
+                }
+            });
 
             edit.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -157,5 +179,37 @@ public class ActionsFragment extends TimeCraftersFragment {
             i++;
             container.addView(view);
         }
+    }
+
+    private void showContextMenu(View view, final int action_index) {
+        Context context = new ContextThemeWrapper(getActivity(), R.style.PopUpMenu);
+        PopupMenu menu = new PopupMenu(context, view);
+        menu.getMenuInflater().inflate(R.menu.action_extras_menu, menu.getMenu());
+
+        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.clone: {
+                        // SHOW CLONE DIALOG
+                        return true;
+                    }
+                    case R.id.save_as_preset: {
+                        PresetDialog dialog = new PresetDialog();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("group_index", getArguments().getInt("group_index"));
+                        bundle.putInt("action_index", action_index);
+                        bundle.putBoolean("is_new_preset", true);
+                        dialog.setArguments(bundle);
+                        dialog.show(getFragmentManager(), "preset_dialog");
+                        return true;
+                    }
+                    default:
+                        return false;
+                }
+            }
+        });
+
+        menu.show();
     }
 }

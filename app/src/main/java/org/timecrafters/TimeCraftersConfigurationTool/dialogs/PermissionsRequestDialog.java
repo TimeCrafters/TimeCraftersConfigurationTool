@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import org.timecrafters.TimeCraftersConfigurationTool.LauncherActivity;
 import org.timecrafters.TimeCraftersConfigurationTool.MainActivity;
 import org.timecrafters.TimeCraftersConfigurationTool.R;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.TAC;
@@ -40,7 +41,7 @@ public class PermissionsRequestDialog extends TimeCraftersDialog {
             @Override
             public void onClick(View v) {
                 dismiss();
-                ((MainActivity) getActivity()).requestStoragePermissions();
+                ((LauncherActivity) getActivity()).requestStoragePermissions();
             }
         });
 

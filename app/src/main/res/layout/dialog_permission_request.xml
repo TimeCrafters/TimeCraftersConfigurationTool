@@ -25,6 +25,7 @@
 
             <Button
                 android:id="@+id/quit_button"
+                style="@style/DangerousButton"
                 android:layout_width="0dip"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"

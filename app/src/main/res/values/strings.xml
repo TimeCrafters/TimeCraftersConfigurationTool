@@ -40,4 +40,6 @@
     <string name="tacnet_connected">Connected</string>
     <string name="tacnet_connecting">Connecting...</string>
     <string name="tacnet_not_connected">Not Connected</string>
+    <string name="clone">Clone</string>
+    <string name="save_as_preset">Save as preset</string>
 </resources>
