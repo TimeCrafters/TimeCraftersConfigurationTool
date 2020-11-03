@@ -10,17 +10,17 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 
 import org.timecrafters.TimeCraftersConfigurationTool.R;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
-import org.timecrafters.TimeCraftersConfigurationTool.backend.Config;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Action;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Group;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersDialog;
 import org.timecrafters.TimeCraftersConfigurationTool.ui.editor.ActionsFragment;
-import org.timecrafters.TimeCraftersConfigurationTool.ui.editor.GroupsFragment;
+import org.timecrafters.TimeCraftersConfigurationTool.ui.settings.presets.PresetsFragment;
 
 import java.util.ArrayList;
 
@@ -63,9 +63,9 @@ public class PresetDialog extends TimeCraftersDialog {
             }
         });
 
-        if (group != null) {
-            title.setText("Editing " + group.name);
-            name.setText(group.name);
+        if (!isNewPreset) {
+            title.setText("Editing " + action.name);
+            name.setText(action.name);
             mutate.setText(getResources().getString(R.string.dialog_update));
         } else {
             title.setText("Add Preset");
@@ -93,16 +93,30 @@ public class PresetDialog extends TimeCraftersDialog {
             public void onClick(View v) {
                 final String presetName = name.getText().toString().trim();
                 Action actionClone = deepCopyAction(action);
-//                if (group != null && group.name.equals(groupName)) {
-//                    dismiss();
-//                }
+                if (!isNewPreset && actionClone.name.equals(presetName)) {
+                    dismiss();
+                }
 
                 if (validated(presetName)) {
                     if (action.name != presetName) {
-                        actionClone.name = presetName;
+                        if (isNewPreset) {
+                            actionClone.name = presetName;
+                        } else {
+                            action.name = presetName;
+                        }
                     }
 
-                    Backend.instance().getConfig().getPresets().getActions().add(actionClone);
+                    if (isNewPreset) {
+                        Backend.instance().getConfig().getPresets().getActions().add(actionClone);
+
+                        ActionsFragment fragment = (ActionsFragment) getFragmentManager().getPrimaryNavigationFragment();
+                        Snackbar.make(fragment.getActivity().findViewById(R.id.snackbar_host), "Saved preset: " + presetName, Snackbar.LENGTH_LONG).show();
+                    } else { // Don't repopulate presets when it is not possible
+                        PresetsFragment fragment = (PresetsFragment) getFragmentManager().getPrimaryNavigationFragment();
+                        if (fragment != null) {
+                            fragment.populatePresets();
+                        }
+                    }
 
                     Backend.instance().configChanged();
 
@@ -126,7 +140,6 @@ public class PresetDialog extends TimeCraftersDialog {
             }
         }
 
-        // TODO: fix editing preset name impossible
         if (!nameUnique) {
             message += "Name is not unique!";
 

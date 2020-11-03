@@ -45,8 +45,12 @@ public class VariableDialog extends TimeCraftersDialog {
         View root = super.onCreateView(inflater, container, savedInstanceState);
 
         if (getArguments() != null) {
-            Group group = Backend.instance().getConfig().getGroups().get(getArguments().getInt("group_index"));
-            action = group.getActions().get(getArguments().getInt("action_index"));
+            if (getArguments().getBoolean("action_is_preset")) {
+                action = Backend.instance().getConfig().getPresets().getActions().get(getArguments().getInt("action_index"));
+            } else {
+                Group group = Backend.instance().getConfig().getGroups().get(getArguments().getInt("group_index"));
+                action = group.getActions().get(getArguments().getInt("action_index"));
+            }
 
             if (getArguments().getInt("variable_index", -1) != -1) {
                 variable = action.getVariables().get(getArguments().getInt("variable_index"));

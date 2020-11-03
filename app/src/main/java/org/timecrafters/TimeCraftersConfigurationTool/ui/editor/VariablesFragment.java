@@ -33,6 +33,7 @@ public class VariablesFragment extends TimeCraftersFragment {
 
     private Config config;
     private LinearLayout container;
+    private boolean actionIsPreset = false;
     private Group group;
     private Action action;
 
@@ -44,8 +45,13 @@ public class VariablesFragment extends TimeCraftersFragment {
         final ScrollView scrollView = root.findViewById(R.id.scrollview);
 
         this.config = Backend.instance().getConfig();
-        this.group = config.getGroups().get(getArguments().getInt("group_index"));
-        this.action = group.getActions().get(getArguments().getInt("action_index"));
+        this.actionIsPreset = getArguments().getBoolean("action_is_preset", false);
+        if (actionIsPreset) {
+            this.action = config.getPresets().getActions().get(getArguments().getInt("action_index"));
+        } else {
+            this.group = config.getGroups().get(getArguments().getInt("group_index"));
+            this.action = group.getActions().get(getArguments().getInt("action_index"));
+        }
 
         if (config != null) {
             ((AppCompatActivity)getActivity()).getSupportActionBar().setTitle("Action: " + action.name);
@@ -59,7 +65,11 @@ public class VariablesFragment extends TimeCraftersFragment {
             public void onClick(View v) {
                 VariableDialog dialog = new VariableDialog();
                 Bundle bundle = new Bundle();
-                bundle.putInt("group_index", getArguments().getInt("group_index"));
+                if (actionIsPreset) {
+                    bundle.putBoolean("action_is_preset", actionIsPreset);
+                } else {
+                    bundle.putInt("group_index", getArguments().getInt("group_index"));
+                }
                 bundle.putInt("action_index", getArguments().getInt("action_index"));
                 dialog.setArguments(bundle);
                 dialog.show(getFragmentManager(), "add_variable");
@@ -94,7 +104,11 @@ public class VariablesFragment extends TimeCraftersFragment {
                 public void onClick(View v) {
                     VariableDialog dialog = new VariableDialog();
                     Bundle bundle = new Bundle();
-                    bundle.putInt("group_index", getArguments().getInt("group_index"));
+                    if (actionIsPreset) {
+                        bundle.putBoolean("action_is_preset", actionIsPreset);
+                    } else {
+                        bundle.putInt("group_index", getArguments().getInt("group_index"));
+                    }
                     bundle.putInt("action_index", getArguments().getInt("action_index"));
                     bundle.putInt("variable_index", action.getVariables().indexOf(variable));
                     dialog.setArguments(bundle);
