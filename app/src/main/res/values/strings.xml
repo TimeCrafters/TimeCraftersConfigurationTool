@@ -45,4 +45,5 @@
     <string name="save_as_preset">Save as preset</string>
     <string name="add_from_preset">Add from preset</string>
     <string name="add_variable">Add Variable</string>
+    <string name="variables">Variables</string>
 </resources>
