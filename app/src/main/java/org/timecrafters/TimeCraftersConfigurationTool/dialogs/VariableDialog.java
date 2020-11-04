@@ -47,6 +47,9 @@ public class VariableDialog extends TimeCraftersDialog {
         if (getArguments() != null) {
             if (getArguments().getBoolean("action_is_preset")) {
                 action = Backend.instance().getConfig().getPresets().getActions().get(getArguments().getInt("action_index"));
+            } else if (getArguments().getBoolean("group_is_preset")) {
+                Group group = Backend.instance().getConfig().getPresets().getGroups().get(getArguments().getInt("group_index"));
+                action = group.getActions().get(getArguments().getInt("action_index"));
             } else {
                 Group group = Backend.instance().getConfig().getGroups().get(getArguments().getInt("group_index"));
                 action = group.getActions().get(getArguments().getInt("action_index"));
@@ -68,12 +71,6 @@ public class VariableDialog extends TimeCraftersDialog {
             @Override
             public void onClick(View v) {
                showVariableTypeMenu();
-            }
-        });
-        variableType.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
-            @Override
-            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-                getActivity().getMenuInflater().inflate(R.menu.variable_type_menu, menu);
             }
         });
 
@@ -101,7 +98,7 @@ public class VariableDialog extends TimeCraftersDialog {
                 variableValue.setText(variable.value().toString());
             }
         } else {
-            title.setText("Add Variable");
+            title.setText(R.string.add_variable);
             setVariableType("Double");
         }
 

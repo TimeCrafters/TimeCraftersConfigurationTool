@@ -18,19 +18,11 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/textView12"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="[In Development]"
-                android:textColor="@color/buttonDangerHover" />
-
-            <TextView
                 android:id="@+id/textView9"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="Groups"
+                android:text="@string/groups"
                 android:textColor="#000"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -40,16 +32,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/button_margin_bottom"
-                android:orientation="vertical">
+                android:orientation="vertical"/>
 
-            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:background="@color/colorSecondary" />
 
             <TextView
                 android:id="@+id/textView11"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
-                android:text="Actions"
+                android:text="@string/actions"
                 android:textColor="#000"
                 android:textSize="18sp"
                 android:textStyle="bold" />

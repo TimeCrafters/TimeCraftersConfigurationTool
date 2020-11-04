@@ -37,7 +37,11 @@ public class ActionDialog extends TimeCraftersDialog {
         View root = super.onCreateView(inflater, container, savedInstanceState);
 
         if (getArguments() != null) {
-            this.group = Backend.instance().getConfig().getGroups().get(getArguments().getInt("group_index"));
+            if (getArguments().getBoolean("group_is_preset", false)) {
+                this.group = Backend.instance().getConfig().getPresets().getGroups().get(getArguments().getInt("group_index"));
+            } else {
+                this.group = Backend.instance().getConfig().getGroups().get(getArguments().getInt("group_index"));
+            }
 
             if (getArguments().getInt("action_index", -1) != -1) {
                 this.action = group.getActions().get(getArguments().getInt("action_index"));
@@ -65,7 +69,7 @@ public class ActionDialog extends TimeCraftersDialog {
             name.setText(action.name);
             comment.setText(action.comment);
 
-            mutate.setText("Update");
+            mutate.setText(R.string.dialog_update);
         } else {
             title.setText("Add Action");
         }
@@ -127,7 +131,7 @@ public class ActionDialog extends TimeCraftersDialog {
             }
         }
 
-        if (!nameUnique && action == null) {
+        if (!nameUnique) {
             message += "Name is not unique!";
 
         } else if (name.length() <= 0) {

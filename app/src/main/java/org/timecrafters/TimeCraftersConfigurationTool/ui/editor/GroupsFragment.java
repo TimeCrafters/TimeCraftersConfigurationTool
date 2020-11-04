@@ -1,13 +1,17 @@
 package org.timecrafters.TimeCraftersConfigurationTool.ui.editor;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -22,8 +26,11 @@ import org.timecrafters.TimeCraftersConfigurationTool.R;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Config;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Group;
+import org.timecrafters.TimeCraftersConfigurationTool.dialogs.AddFromPresetDialog;
+import org.timecrafters.TimeCraftersConfigurationTool.dialogs.CloneDialog;
 import org.timecrafters.TimeCraftersConfigurationTool.dialogs.ConfirmationDialog;
 import org.timecrafters.TimeCraftersConfigurationTool.dialogs.GroupDialog;
+import org.timecrafters.TimeCraftersConfigurationTool.dialogs.PresetDialog;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersDialog;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersFragment;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersDialogRunnable;
@@ -59,6 +66,15 @@ public class GroupsFragment extends TimeCraftersFragment {
             }
         });
 
+        actionButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                showAddMenu(actionButton);
+
+                return true;
+            }
+        });
+
         floatingActionButtonAutoHide(actionButton, scrollView);
         if (Backend.instance() != null) {
             if (Backend.instance().getConfig() == null) {
@@ -86,7 +102,7 @@ public class GroupsFragment extends TimeCraftersFragment {
         int i = 0;
         for (final Group group : config.getGroups()) {
             View view = View.inflate(getContext(), R.layout.fragment_part_groups, null);
-            Button name = view.findViewById(R.id.name);
+            final Button name = view.findViewById(R.id.name);
             ImageButton rename = view.findViewById(R.id.rename);
             ImageButton delete = view.findViewById(R.id.delete);
 
@@ -96,6 +112,8 @@ public class GroupsFragment extends TimeCraftersFragment {
                 view.setBackgroundColor(getResources().getColor(R.color.list_odd));
             }
 
+            final int index = i;
+
             name.setText(group.name);
             name.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -103,6 +121,14 @@ public class GroupsFragment extends TimeCraftersFragment {
                     Bundle bundle = new Bundle();
                     bundle.putInt("group_index", config.getGroups().indexOf(group));
                     Navigation.findNavController(v).navigate(R.id.actions_fragment, bundle);
+                }
+            });
+            name.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    showActionExtrasMenu(name, index);
+
+                    return true;
                 }
             });
 
@@ -150,5 +176,66 @@ public class GroupsFragment extends TimeCraftersFragment {
             i++;
             container.addView(view);
         }
+    }
+
+    private void showActionExtrasMenu(View view, final int group_index) {
+        Context context = new ContextThemeWrapper(getActivity(), R.style.PopUpMenu);
+        PopupMenu menu = new PopupMenu(context, view);
+        menu.getMenuInflater().inflate(R.menu.action_extras_menu, menu.getMenu());
+
+        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.clone: {
+                        CloneDialog dialog = new CloneDialog();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("group_index", group_index);
+                        dialog.setArguments(bundle);
+                        dialog.show(getFragmentManager(), "clone_dialog");
+                        return true;
+                    }
+                    case R.id.save_as_preset: {
+                        PresetDialog dialog = new PresetDialog();
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("group_index", group_index);
+                        bundle.putBoolean("is_new_preset", true);
+                        dialog.setArguments(bundle);
+                        dialog.show(getFragmentManager(), "preset_dialog");
+                        return true;
+                    }
+                    default:
+                        return false;
+                }
+            }
+        });
+
+        menu.show();
+    }
+
+    private void showAddMenu(View view) {
+        Context context = new ContextThemeWrapper(getActivity(), R.style.PopUpMenu);
+        PopupMenu menu = new PopupMenu(context, view);
+        menu.getMenuInflater().inflate(R.menu.action_add_menu, menu.getMenu());
+
+        menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.add_from_preset: {
+                        AddFromPresetDialog dialog = new AddFromPresetDialog();
+                        Bundle bundle = new Bundle();
+                        bundle.putBoolean("show_actions", false);
+                        dialog.setArguments(bundle);
+                        dialog.show(getFragmentManager(), "add_from_preset_dialog");
+                        return true;
+                    }
+                    default:
+                        return false;
+                }
+            }
+        });
+
+        menu.show();
     }
 }

@@ -17,14 +17,16 @@ import org.timecrafters.TimeCraftersConfigurationTool.backend.Config;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Action;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Group;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersDialog;
+import org.timecrafters.TimeCraftersConfigurationTool.ui.editor.ActionsFragment;
 import org.timecrafters.TimeCraftersConfigurationTool.ui.editor.GroupsFragment;
 
 import java.util.ArrayList;
 
-public class GroupDialog extends TimeCraftersDialog {
+public class CloneDialog extends TimeCraftersDialog {
     private static final int HOST_ID = R.id.navigation_editor;
-    final String TAG = "GroupDialog";
+    final String TAG = "CloneDialog";
     private Group group;
+    private Action action;
     private TextView nameError;
 
     @Override
@@ -33,8 +35,20 @@ public class GroupDialog extends TimeCraftersDialog {
 
         View root = super.onCreateView(inflater, container, savedInstanceState);
 
-        if (getArguments() != null) {
+        if (getArguments().getBoolean("is_cloning_preset", false)) {
+            if (getArguments().getInt("action_index", -1) != -1) {
+                this.group = Backend.instance().getConfig().getGroups().get(getArguments().getInt("group_index"));
+                this.action = Backend.instance().getConfig().getPresets().getActions().get(getArguments().getInt("action_index"));
+            } else {
+                this.group = Backend.instance().getConfig().getPresets().getGroups().get(getArguments().getInt("group_index"));
+            }
+
+        } else {
             this.group = Backend.instance().getConfig().getGroups().get(getArguments().getInt("group_index"));
+
+            if (getArguments().getInt("action_index", -1) != -1) {
+                this.action = group.getActions().get(getArguments().getInt("action_index"));
+            }
         }
 
         final TextView title = root.findViewById(R.id.dialog_title);
@@ -52,12 +66,12 @@ public class GroupDialog extends TimeCraftersDialog {
             }
         });
 
-        if (group != null) {
-            title.setText("Editing " + group.name);
-            name.setText(group.name);
-            mutate.setText(getResources().getString(R.string.dialog_update));
+        if (action != null) {
+            title.setText("Cloning action " + action.name);
+            name.setText(action.name);
         } else {
-            title.setText("Add Group");
+            title.setText("Cloning group " + group.name);
+            name.setText(group.name);
         }
 
         name.addTextChangedListener(new TextWatcher() {
@@ -80,26 +94,35 @@ public class GroupDialog extends TimeCraftersDialog {
         mutate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String groupName = name.getText().toString().trim();
-                if (group != null && group.name.equals(groupName)) {
-                    dismiss();
-                }
+                final String finalName = name.getText().toString().trim();
+                if (validated(finalName)) {
+                    if (action != null) {
+                        String json = Backend.instance().gsonForConfig().toJson(action);
+                        Action actionClone = Backend.instance().gsonForConfig().fromJson(json, Action.class);
+                        actionClone.name = finalName;
 
-                if (validated(groupName)  || (group != null && group.name.equals(groupName))) {
-                    if (group != null) {
-                        group.name = groupName;
+                        group.getActions().add(actionClone);
+
+                        Backend.instance().configChanged();
+                        ActionsFragment fragment = (ActionsFragment) getFragmentManager().getPrimaryNavigationFragment();
+                        if (fragment != null) {
+                            fragment.populateActions();
+                        }
+                        dismiss();
                     } else {
-                        Group group = new Group(groupName, new ArrayList<Action>());
+                        String json = Backend.instance().gsonForConfig().toJson(group);
+                        Group groupClone = Backend.instance().gsonForConfig().fromJson(json, Group.class);
+                        groupClone.name = finalName;
 
-                        Backend.instance().getConfig().getGroups().add(group);
-                    }
+                        Backend.instance().getConfig().getGroups().add(groupClone);
 
-                    Backend.instance().configChanged();
-                    GroupsFragment fragment = (GroupsFragment) getFragmentManager().getPrimaryNavigationFragment();
-                    if (fragment != null) {
-                        fragment.populateGroups();
+                        Backend.instance().configChanged();
+                        GroupsFragment fragment = (GroupsFragment) getFragmentManager().getPrimaryNavigationFragment();
+                        if (fragment != null) {
+                            fragment.populateGroups();
+                        }
+                        dismiss();
                     }
-                    dismiss();
                 }
             }
         });
@@ -112,10 +135,19 @@ public class GroupDialog extends TimeCraftersDialog {
         Config config = Backend.instance().getConfig();
         boolean nameUnique = true;
 
-        for (Group g : config.getGroups()) {
-            if (g.name.equals(name)) {
-                nameUnique = false;
-                break;
+        if (action != null) {
+            for (Action a : group.getActions()) {
+                if (a.name.equals(name)) {
+                    nameUnique = false;
+                    break;
+                }
+            }
+        } else {
+            for (Group g : config.getGroups()) {
+                if (g.name.equals(name)) {
+                    nameUnique = false;
+                    break;
+                }
             }
         }
 

@@ -22,6 +22,7 @@
 
     <string name="search">Search</string>
     <string name="groups">Groups</string>
+    <string name="actions">Actions</string>
 
     <string name="dialog_close">Close</string>
     <string name="dialog_cancel">Cancel</string>
@@ -42,4 +43,6 @@
     <string name="tacnet_not_connected">Not Connected</string>
     <string name="clone">Clone</string>
     <string name="save_as_preset">Save as preset</string>
+    <string name="add_from_preset">Add from preset</string>
+    <string name="add_variable">Add Variable</string>
 </resources>

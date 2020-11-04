@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/item_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Button" />
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/button_margin_left"
+            android:layout_marginLeft="@dimen/button_margin_left"
+            android:layout_marginEnd="@dimen/button_margin_right"
+            android:layout_marginRight="@dimen/button_margin_right"
+            android:layout_marginBottom="@dimen/button_margin_bottom" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

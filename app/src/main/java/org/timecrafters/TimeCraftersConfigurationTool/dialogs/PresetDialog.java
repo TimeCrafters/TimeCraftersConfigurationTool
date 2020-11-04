@@ -20,6 +20,7 @@ import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Action;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Group;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersDialog;
 import org.timecrafters.TimeCraftersConfigurationTool.ui.editor.ActionsFragment;
+import org.timecrafters.TimeCraftersConfigurationTool.ui.editor.GroupsFragment;
 import org.timecrafters.TimeCraftersConfigurationTool.ui.settings.presets.PresetsFragment;
 
 import java.util.ArrayList;
@@ -42,9 +43,16 @@ public class PresetDialog extends TimeCraftersDialog {
 
             if (isNewPreset) {
                 this.group = Backend.instance().getConfig().getGroups().get(getArguments().getInt("group_index"));
-                this.action = group.getActions().get(getArguments().getInt("action_index"));
+
+                if (getArguments().getInt("action_index", -1) != -1) {
+                    this.action = group.getActions().get(getArguments().getInt("action_index"));
+                }
             } else {
-                this.action = Backend.instance().getConfig().getPresets().getActions().get(getArguments().getInt("action_index"));
+                if (getArguments().getInt("action_index", -1) != -1) {
+                    this.action = Backend.instance().getConfig().getPresets().getActions().get(getArguments().getInt("action_index"));
+                } else {
+                    this.group = Backend.instance().getConfig().getPresets().getGroups().get(getArguments().getInt("group_index"));
+                }
             }
         }
 
@@ -64,8 +72,13 @@ public class PresetDialog extends TimeCraftersDialog {
         });
 
         if (!isNewPreset) {
-            title.setText("Editing " + action.name);
-            name.setText(action.name);
+            if (action != null) {
+                title.setText("Editing " + action.name);
+                name.setText(action.name);
+            } else {
+                title.setText("Editing " + group.name);
+                name.setText(group.name);
+            }
             mutate.setText(getResources().getString(R.string.dialog_update));
         } else {
             title.setText("Add Preset");
@@ -91,37 +104,13 @@ public class PresetDialog extends TimeCraftersDialog {
         mutate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String presetName = name.getText().toString().trim();
-                Action actionClone = deepCopyAction(action);
-                if (!isNewPreset && actionClone.name.equals(presetName)) {
-                    dismiss();
-                }
+            final String presetName = name.getText().toString().trim();
 
-                if (validated(presetName)) {
-                    if (action.name != presetName) {
-                        if (isNewPreset) {
-                            actionClone.name = presetName;
-                        } else {
-                            action.name = presetName;
-                        }
-                    }
-
-                    if (isNewPreset) {
-                        Backend.instance().getConfig().getPresets().getActions().add(actionClone);
-
-                        ActionsFragment fragment = (ActionsFragment) getFragmentManager().getPrimaryNavigationFragment();
-                        Snackbar.make(fragment.getActivity().findViewById(R.id.snackbar_host), "Saved preset: " + presetName, Snackbar.LENGTH_LONG).show();
-                    } else { // Don't repopulate presets when it is not possible
-                        PresetsFragment fragment = (PresetsFragment) getFragmentManager().getPrimaryNavigationFragment();
-                        if (fragment != null) {
-                            fragment.populatePresets();
-                        }
-                    }
-
-                    Backend.instance().configChanged();
-
-                    dismiss();
-                }
+            if (action != null) {
+                handleAction(presetName);
+            } else {
+                handleGroup(presetName);
+            }
             }
         });
 
@@ -130,13 +119,25 @@ public class PresetDialog extends TimeCraftersDialog {
 
     private boolean validated(String name) {
         String message = "";
-        ArrayList<Action> actions = Backend.instance().getConfig().getPresets().getActions();
         boolean nameUnique = true;
 
-        for (Action a : actions) {
-            if (a.name.equals(name)) {
-                nameUnique = false;
-                break;
+        if (action != null) {
+            ArrayList<Action> actions = Backend.instance().getConfig().getPresets().getActions();
+
+            for (Action a : actions) {
+                if (a.name.equals(name)) {
+                    nameUnique = false;
+                    break;
+                }
+            }
+        } else {
+            ArrayList<Group> groups = Backend.instance().getConfig().getPresets().getGroups();
+
+            for (Group g : groups) {
+                if (g.name.equals(name)) {
+                    nameUnique = false;
+                    break;
+                }
             }
         }
 
@@ -158,9 +159,80 @@ public class PresetDialog extends TimeCraftersDialog {
         }
     }
 
+    private Group deepCopyGroup(Group group) {
+        String json = Backend.instance().gsonForConfig().toJson(group);
+
+        return Backend.instance().gsonForConfig().fromJson(json, Group.class);
+    }
+
     private Action deepCopyAction(Action action) {
         String json = Backend.instance().gsonForConfig().toJson(action);
 
         return Backend.instance().gsonForConfig().fromJson(json, Action.class);
+    }
+
+    private void handleGroup(String presetName) {
+        Group groupClone = deepCopyGroup(group);
+        if (!isNewPreset && groupClone.name.equals(presetName)) {
+            dismiss();
+        }
+
+        if (validated(presetName)) {
+            if (group.name != presetName) {
+                if (isNewPreset) {
+                    groupClone.name = presetName;
+                } else {
+                    group.name = presetName;
+                }
+            }
+
+            if (isNewPreset) {
+                Backend.instance().getConfig().getPresets().getGroups().add(groupClone);
+
+                GroupsFragment fragment = (GroupsFragment) getFragmentManager().getPrimaryNavigationFragment();
+                Snackbar.make(fragment.getActivity().findViewById(R.id.snackbar_host), "Saved group preset: " + presetName, Snackbar.LENGTH_LONG).show();
+            } else { // Don't repopulate presets when it is not possible
+                PresetsFragment fragment = (PresetsFragment) getFragmentManager().getPrimaryNavigationFragment();
+                if (fragment != null) {
+                    fragment.populatePresets();
+                }
+            }
+
+            Backend.instance().configChanged();
+
+            dismiss();
+        }
+    }
+    private void handleAction(String presetName) {
+        Action actionClone = deepCopyAction(action);
+        if (!isNewPreset && actionClone.name.equals(presetName)) {
+            dismiss();
+        }
+
+        if (validated(presetName)) {
+            if (action.name != presetName) {
+                if (isNewPreset) {
+                    actionClone.name = presetName;
+                } else {
+                    action.name = presetName;
+                }
+            }
+
+            if (isNewPreset) {
+                Backend.instance().getConfig().getPresets().getActions().add(actionClone);
+
+                ActionsFragment fragment = (ActionsFragment) getFragmentManager().getPrimaryNavigationFragment();
+                Snackbar.make(fragment.getActivity().findViewById(R.id.snackbar_host), "Saved action preset: " + presetName, Snackbar.LENGTH_LONG).show();
+            } else { // Don't repopulate presets when it is not possible
+                PresetsFragment fragment = (PresetsFragment) getFragmentManager().getPrimaryNavigationFragment();
+                if (fragment != null) {
+                    fragment.populatePresets();
+                }
+            }
+
+            Backend.instance().configChanged();
+
+            dismiss();
+        }
     }
 }

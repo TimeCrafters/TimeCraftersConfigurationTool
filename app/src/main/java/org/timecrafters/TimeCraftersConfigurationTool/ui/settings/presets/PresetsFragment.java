@@ -45,11 +45,16 @@ public class PresetsFragment extends TimeCraftersFragment {
     }
 
     public void populatePresets() {
+        populateGroups();
+        populateActions();
+    }
+
+    private void populateGroups() {
         groupsContainer.removeAllViews();
-        actionsContainer.removeAllViews();
 
         int i = 0;
-        for (Group group : Backend.instance().getConfig().getPresets().getGroups()) {
+        for (final Group group : Backend.instance().getConfig().getPresets().getGroups()) {
+            final int group_index = i;
             View view = inflater.inflate(R.layout.fragment_part_presets, null);
 
             if (i % 2 == 0) { // even
@@ -58,12 +63,74 @@ public class PresetsFragment extends TimeCraftersFragment {
                 view.setBackgroundColor(getResources().getColor(R.color.list_odd));
             }
 
+            Button name = view.findViewById(R.id.name);
+            ImageButton rename = view.findViewById(R.id.rename);
+            ImageButton delete = view.findViewById(R.id.delete);
+
+            name.setText(group.name);
+            name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("group_is_preset", true);
+                    bundle.putInt("group_index", group_index);
+                    Navigation.findNavController(v).navigate(R.id.actions_fragment, bundle);
+                }
+            });
+
+            rename.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PresetDialog dialog = new PresetDialog();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("group_index", group_index);
+                    dialog.setArguments(bundle);
+                    dialog.show(getFragmentManager(), "preset_dialog");
+                }
+            });
+
+            delete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ConfirmationDialog dialog = new ConfirmationDialog();
+                    Bundle bundle = new Bundle();
+
+                    bundle.putString("message", "Delete group preset " + group.name + "?");
+                    bundle.putString("action", deletePresetKey);
+                    TimeCraftersDialogRunnable action = new TimeCraftersDialogRunnable() {
+                        @Override
+                        public void run(TimeCraftersDialog dialog) {
+                            Backend.getStorage().remove(deletePresetKey);
+
+                            if (Backend.instance().getConfig().getPresets().getGroups().get(group_index) != null) {
+                                Backend.instance().getConfig().getPresets().getGroups().remove(group_index);
+
+                                Backend.instance().configChanged();
+                            }
+
+                            PresetsFragment fragment = (PresetsFragment) dialog.getFragmentManager().getPrimaryNavigationFragment();
+                            if (fragment != null) {
+                                fragment.populatePresets();
+                            }
+                        }
+                    } ;
+                    Backend.getStorage().put(deletePresetKey, action);
+                    dialog.setArguments(bundle);
+
+                    dialog.show(getFragmentManager(), deletePresetKey);
+                }
+            });
+
             groupsContainer.addView(view);
             i++;
         }
+    }
 
-        i = 0;
-        for (Action action : Backend.instance().getConfig().getPresets().getActions()) {
+    private void populateActions() {
+        actionsContainer.removeAllViews();
+
+        int i = 0;
+        for (final Action action : Backend.instance().getConfig().getPresets().getActions()) {
             final int action_index = i;
             View view = inflater.inflate(R.layout.fragment_part_presets, null);
 
@@ -105,7 +172,7 @@ public class PresetsFragment extends TimeCraftersFragment {
                     ConfirmationDialog dialog = new ConfirmationDialog();
                     Bundle bundle = new Bundle();
 
-                    bundle.putString("message", "Delete Preset?");
+                    bundle.putString("message", "Delete action preset " + action.name + "?");
                     bundle.putString("action", deletePresetKey);
                     TimeCraftersDialogRunnable action = new TimeCraftersDialogRunnable() {
                         @Override
