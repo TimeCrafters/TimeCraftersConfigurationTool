@@ -3,6 +3,7 @@ package org.timecrafters.TimeCraftersConfigurationTool.dialogs;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -54,6 +55,7 @@ public class AddFromPresetDialog extends TimeCraftersDialog {
             Button name = view.findViewById(R.id.name);
             TextView description = view.findViewById(R.id.description);
             name.setText(group.name);
+            description.setVisibility(View.GONE);
 
             if (i % 2 == 0) { // even
                 view.setBackgroundColor(getResources().getColor(R.color.list_even));
@@ -61,7 +63,20 @@ public class AddFromPresetDialog extends TimeCraftersDialog {
                 view.setBackgroundColor(getResources().getColor(R.color.list_odd));
             }
 
-            description.setVisibility(View.GONE);
+            final int index = i;
+            name.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    CloneDialog dialog = new CloneDialog();
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("is_cloning_preset", true);
+                    bundle.putInt("group_index", index);
+                    dialog.setArguments(bundle);
+                    dialog.show(getFragmentManager(), "clone_group_preset");
+
+                    dismiss();
+                }
+            });
 
             container.addView(view);
             i++;
@@ -86,6 +101,9 @@ public class AddFromPresetDialog extends TimeCraftersDialog {
                     CloneDialog dialog = new CloneDialog();
                     Bundle bundle = new Bundle();
                     bundle.putBoolean("is_cloning_preset", true);
+                    if (getArguments().getBoolean("group_is_preset", false)) {
+                        bundle.putBoolean("group_is_preset", true);
+                    }
                     bundle.putInt("group_index", getArguments().getInt("group_index"));
                     bundle.putInt("action_index", index);
                     dialog.setArguments(bundle);

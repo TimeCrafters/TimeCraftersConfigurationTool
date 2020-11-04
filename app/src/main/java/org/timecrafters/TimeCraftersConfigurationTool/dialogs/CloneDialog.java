@@ -37,7 +37,12 @@ public class CloneDialog extends TimeCraftersDialog {
 
         if (getArguments().getBoolean("is_cloning_preset", false)) {
             if (getArguments().getInt("action_index", -1) != -1) {
-                this.group = Backend.instance().getConfig().getGroups().get(getArguments().getInt("group_index"));
+                if (getArguments().getBoolean("group_is_preset", false)) {
+                    this.group = Backend.instance().getConfig().getPresets().getGroups().get(getArguments().getInt("group_index"));
+                } else {
+                    this.group = Backend.instance().getConfig().getGroups().get(getArguments().getInt("group_index"));
+                }
+
                 this.action = Backend.instance().getConfig().getPresets().getActions().get(getArguments().getInt("action_index"));
             } else {
                 this.group = Backend.instance().getConfig().getPresets().getGroups().get(getArguments().getInt("group_index"));

@@ -2,6 +2,7 @@ package org.timecrafters.TimeCraftersConfigurationTool.ui.editor;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -38,6 +39,7 @@ import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersFragme
 
 public class ActionsFragment extends TimeCraftersFragment {
     final private String deleteActionKey = "delete_action";
+    final private String TAG = "ActionsFragment";
 
     private Config config;
     private Group group;
@@ -249,6 +251,10 @@ public class ActionsFragment extends TimeCraftersFragment {
                         AddFromPresetDialog dialog = new AddFromPresetDialog();
                         Bundle bundle = new Bundle();
                         bundle.putBoolean("show_actions", true);
+                        if (groupIsPreset) {
+                            bundle.putBoolean("group_is_preset", true);
+                        }
+                        bundle.putInt("group_index", getArguments().getInt("group_index"));
                         dialog.setArguments(bundle);
                         dialog.show(getFragmentManager(), "add_from_preset_dialog");
                         return true;

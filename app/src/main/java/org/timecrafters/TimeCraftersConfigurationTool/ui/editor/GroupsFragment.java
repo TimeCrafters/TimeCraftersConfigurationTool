@@ -198,8 +198,8 @@ public class GroupsFragment extends TimeCraftersFragment {
                     case R.id.save_as_preset: {
                         PresetDialog dialog = new PresetDialog();
                         Bundle bundle = new Bundle();
-                        bundle.putInt("group_index", group_index);
                         bundle.putBoolean("is_new_preset", true);
+                        bundle.putInt("group_index", group_index);
                         dialog.setArguments(bundle);
                         dialog.show(getFragmentManager(), "preset_dialog");
                         return true;
