@@ -21,7 +21,6 @@ import org.timecrafters.TimeCraftersConfigurationTool.tacnet.TACNETServerService
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
-    private static final String AUTO_START_MODEL = "pixel"; // "rev hub" /* LOWERCASE */
     private AppBarConfiguration appBarConfiguration;
 
     @Override
@@ -47,14 +46,18 @@ public class MainActivity extends AppCompatActivity {
         Backend.instance().applicationContext = getApplicationContext();
 
         // Auto start TACNET server if allowed and device model contains AUTO_START_MODEL
-        if (!TAC.COMPETITION_MODE && Backend.instance().getServer() == null && Build.MODEL.toLowerCase().contains(AUTO_START_MODEL)) {
-            Log.i(TAG, "Detected REV Robotics Control Hub, attempting to auto-start TACNET Server Service...");
+        if (!TAC.BUILD_COMPETITION_MODE && TAC.BUILD_AUTO_START && Backend.instance().getServer() == null &&
+                Build.MODEL.toLowerCase().contains(TAC.BUILD_AUTO_START_MODEL)) {
+            Log.i(TAG, "Detected " + Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.HARDWARE + "), starting TACNET Server Service...");
 
-            startService(new Intent(this, TACNETServerService.class));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                startForegroundService(new Intent(this, TACNETServerService.class));
+            } else {
+                startService(new Intent(this, TACNETServerService.class));
+            }
         }
 
         if (getIntent().getBooleanExtra("navigate_to_tacnet", false)) {
-            Log.i(TAG, "Navigatingg to tacnet...");
             Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.navigation_tacnet);
         }
     }

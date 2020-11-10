@@ -11,6 +11,9 @@ public class TAC {
                                SETTINGS_PATH = ROOT_PATH + File.separator + "settings.json";
 
     public static final int CONFIG_SPEC_VERSION = 2;
+
     // Set COMPETITION_MODE to true to disable automatic TACNET server start
-    public static final boolean COMPETITION_MODE = false;
+    public static final boolean BUILD_COMPETITION_MODE = false;
+    public static final boolean BUILD_AUTO_START = true;
+    public static final String BUILD_AUTO_START_MODEL = "pixel";// "rev hub"; /* LOWERCASE */
 }
