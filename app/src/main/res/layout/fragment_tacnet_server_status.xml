@@ -2,19 +2,15 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_height="match_parent">
 
         <LinearLayout
-            android:id="@+id/tacnet_connect_layout"
+            android:id="@+id/tacnet_server_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="48dp"
@@ -26,6 +22,7 @@
             android:padding="16dp">
 
             <LinearLayout
+                android:id="@+id/linearLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/button_margin_left"
@@ -42,7 +39,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Connection Status"
+                        android:text="Client Status"
                         android:textStyle="bold" />
 
                     <TextView
@@ -82,7 +79,7 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/connection_status"
+                        android:id="@+id/client_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -121,13 +118,15 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/tacnet_disconnect"
+                android:id="@+id/stop_server"
                 style="@style/DangerousButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/dialog_button_margin"
-                android:text="@string/tacnet_disconnect" />
-        </LinearLayout>
+                android:layout_weight="1"
+                android:text="@string/tacnet_stop_server" />
 
+        </LinearLayout>
     </ScrollView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

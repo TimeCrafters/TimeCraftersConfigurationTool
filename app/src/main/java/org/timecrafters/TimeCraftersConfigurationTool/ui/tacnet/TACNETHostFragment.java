@@ -1,5 +1,6 @@
 package org.timecrafters.TimeCraftersConfigurationTool.ui.tacnet;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,19 +13,14 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
 
 import org.timecrafters.TimeCraftersConfigurationTool.R;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.TACNET;
-import org.timecrafters.TimeCraftersConfigurationTool.dialogs.ServerDialog;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersFragment;
+import org.timecrafters.TimeCraftersConfigurationTool.tacnet.TACNETServerService;
 import org.timecrafters.TimeCraftersConfigurationTool.tacnet.support.ConnectionStatsSyncHandler;
 import org.timecrafters.TimeCraftersConfigurationTool.tacnet.support.ServerStatsSyncHandler;
 
@@ -32,6 +28,7 @@ public class TACNETHostFragment extends TimeCraftersFragment {
 
     private static final String TAG = "TACNETFragment";
     private ConnectionStatsSyncHandler connectionStatsSyncHandler;
+    private ServerStatsSyncHandler serverStatsSyncHandler;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup viewGroup, Bundle savedInstanceState) {
@@ -41,6 +38,8 @@ public class TACNETHostFragment extends TimeCraftersFragment {
 
         if (Backend.instance().tacnet().status() != TACNET.Status.NOT_CONNECTED) {
             inflateTACNETConnectionStatus(container);
+        } else if (Backend.instance().getServer() != null) {
+            inflateTACNETServerStatus(container);
         } else {
             inflateTACNET(container);
         }
@@ -106,8 +105,10 @@ public class TACNETHostFragment extends TimeCraftersFragment {
         startServerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ServerDialog dialog = new ServerDialog();
-                dialog.show(getFragmentManager(), null);
+                getActivity().startService(new Intent(getContext(), TACNETServerService.class));
+
+                root.removeAllViews();
+                inflateTACNETServerStatus(container);
             }
         });
     }
@@ -133,14 +134,41 @@ public class TACNETHostFragment extends TimeCraftersFragment {
         });
     }
 
+    private void inflateTACNETServerStatus(final LinearLayout container) {
+        ((AppCompatActivity) getActivity()).getSupportActionBar().setTitle(R.string.title_tacnet_server_status);
+        final ConstraintLayout root = (ConstraintLayout) getLayoutInflater().inflate(R.layout.fragment_tacnet_server_status, null);
+        container.removeAllViews();
+        container.addView(root);
+
+        serverStatsSyncHandler = new ServerStatsSyncHandler(root, 1_000);
+
+        Button stopServer = root.findViewById(R.id.stop_server);
+        stopServer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().stopService(new Intent(getContext(), TACNETServerService.class));
+                Backend.instance().stopErrorSound();
+                serverStatsSyncHandler.stop();
+
+                inflateTACNET(container);
+            }
+        });
+    }
+
     @Override
     public void onDetach() {
         super.onDetach();
 
         if (connectionStatsSyncHandler != null) {
-            Log.d(TAG, "onDetach: stopping sync handler");
+            Log.d(TAG, "onDetach: stopping client sync handler");
             connectionStatsSyncHandler.stop();
             connectionStatsSyncHandler = null;
+        }
+
+        if (serverStatsSyncHandler != null) {
+            Log.d(TAG, "onDetach: stopping server sync handler");
+            serverStatsSyncHandler.stop();
+            serverStatsSyncHandler = null;
         }
     }
 }

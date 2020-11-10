@@ -5,6 +5,7 @@
     <string name="title_settings">Settings</string>
     <string name="title_tacnet">TACNET</string>
     <string name="title_tacnet_connection_status">TACNET Connection Status</string>
+    <string name="title_tacnet_server_status">TACNET Server Status</string>
 
     <string name="tacnet_hostname">Hostname</string>
     <string name="tacnet_port">Port</string>

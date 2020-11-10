@@ -17,6 +17,7 @@ public class ServerStatsSyncHandler {
     private Handler handler;
     private Runnable runner;
     private long delay;
+    private boolean stopped = false;
     private TextView clientStatus, totalPacketsIn, totalPacketsOut, totalDataIn, totalDataOut;
 
     public ServerStatsSyncHandler(View view, long delay) {
@@ -42,7 +43,7 @@ public class ServerStatsSyncHandler {
     public void run() {
         Server server = Backend.instance().getServer();
 
-        if (server != null) {
+        if (!stopped && server != null) {
             if (server.hasActiveClient()) {
                 clientStatus.setText("Connected");
             } else {
@@ -56,5 +57,9 @@ public class ServerStatsSyncHandler {
 
             handler.postDelayed(runner, delay);
         }
+    }
+
+    public void stop() {
+        stopped = true;
     }
 }
