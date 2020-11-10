@@ -14,6 +14,6 @@ public class TAC {
 
     // Set COMPETITION_MODE to true to disable automatic TACNET server start
     public static final boolean BUILD_COMPETITION_MODE = false;
-    public static final boolean BUILD_AUTO_START = true;
-    public static final String BUILD_AUTO_START_MODEL = "pixel";// "rev hub"; /* LOWERCASE */
+    public static final boolean BUILD_AUTO_START = false;
+    public static final String BUILD_AUTO_START_MODEL = "rev hub"; /* LOWERCASE */
 }

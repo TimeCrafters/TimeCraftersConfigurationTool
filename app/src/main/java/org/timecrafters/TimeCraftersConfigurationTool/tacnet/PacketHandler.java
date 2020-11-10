@@ -67,6 +67,11 @@ public class PacketHandler {
                 return;
             }
 
+            case SELECT_CONFIG: {
+                handleSelectConfig(packet);
+                return;
+            }
+
             case ADD_CONFIG: {
                 handleAddConfig(packet);
                 return;
@@ -145,6 +150,11 @@ public class PacketHandler {
             ArrayList<String> diff = Backend.instance().configsList();
 
             for (String part : remoteConfigs) {
+                // Don't crash if configs list is empty
+                if (part == null || part.length() == 0) {
+                    continue;
+                }
+
                 final String[] configInfo = part.split(",", 2);
                 final String name = configInfo[0];
                 final int revision = Integer.parseInt(configInfo[1]);
