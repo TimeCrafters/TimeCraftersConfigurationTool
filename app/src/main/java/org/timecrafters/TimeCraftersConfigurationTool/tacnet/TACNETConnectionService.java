@@ -41,14 +41,21 @@ public class TACNETConnectionService extends Service {
 
     @Override
     public void onDestroy() {
+        disconnect();
         stopForeground(true);
     }
 
     private void connect() {
+        if (!Backend.instance().tacnet().isConnected()) {
+            final String hostname = Backend.instance().getSettings().hostname;
+            final int port = Backend.instance().getSettings().port;
+
+            Backend.instance().tacnet().connect(hostname, port);
+        }
     }
 
     private void disconnect() {
-        Backend.instance().stopServer();
+        Backend.instance().tacnet().close();
     }
 
     private void foregroundify() {
@@ -57,7 +64,8 @@ public class TACNETConnectionService extends Service {
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("TACNET Connection is running")
+                .setContentTitle("TACNET Connection")
+                .setContentText("Connected to: " + Backend.instance().getSettings().hostname + ":" + Backend.instance().getSettings().port)
                 .setSmallIcon(R.drawable.tacnet)
                 .setContentIntent(pendingIntent);
         Notification notification = builder.build();

@@ -20,6 +20,7 @@ import org.timecrafters.TimeCraftersConfigurationTool.R;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.TACNET;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersFragment;
+import org.timecrafters.TimeCraftersConfigurationTool.tacnet.TACNETConnectionService;
 import org.timecrafters.TimeCraftersConfigurationTool.tacnet.TACNETServerService;
 import org.timecrafters.TimeCraftersConfigurationTool.tacnet.support.ConnectionStatsSyncHandler;
 import org.timecrafters.TimeCraftersConfigurationTool.tacnet.support.ServerStatsSyncHandler;
@@ -95,7 +96,7 @@ public class TACNETHostFragment extends TimeCraftersFragment {
             public void onClick(View v) {
                 Backend.instance().saveSettings();
 
-                Backend.instance().tacnet().connect(hostname.getText().toString(), Integer.parseInt(port.getText().toString()));
+                getActivity().startService(new Intent(getContext(), TACNETConnectionService.class));
 
                 root.removeAllViews();
                 inflateTACNETConnectionStatus(container);
@@ -125,7 +126,7 @@ public class TACNETHostFragment extends TimeCraftersFragment {
         disconnect.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Backend.instance().tacnet().close();
+                getActivity().stopService(new Intent(getContext(), TACNETConnectionService.class));
                 Backend.instance().stopErrorSound();
                 connectionStatsSyncHandler.stop();
 
