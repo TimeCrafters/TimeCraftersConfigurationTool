@@ -1,6 +1,7 @@
 package org.timecrafters.TimeCraftersConfigurationTool.ui.search;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.Navigation;
 
 import org.timecrafters.TimeCraftersConfigurationTool.R;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
@@ -19,6 +21,7 @@ import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Action;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Group;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Variable;
 import org.timecrafters.TimeCraftersConfigurationTool.library.SearchResult;
+import org.timecrafters.TimeCraftersConfigurationTool.library.SearchResults;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersFragment;
 
 public class SearchFragment extends TimeCraftersFragment {
@@ -29,6 +32,7 @@ public class SearchFragment extends TimeCraftersFragment {
     LinearLayout searchResultsContainer;
     EditText searchQuery;
     ImageButton searchButton;
+    String query;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.config = Backend.instance().getConfig();
@@ -43,32 +47,43 @@ public class SearchFragment extends TimeCraftersFragment {
             public void onClick(View v) {
                 if (Backend.instance().getConfig() != null) {
                     performSearch();
+                    getArguments().putString("query", query);
                 }
             }
         });
+
+        if (getArguments() == null) {
+            setArguments(new Bundle());
+        }
+
+        // Restore search results when returning from navigating from a search result
+        if (getArguments().getString("query", null) != null) {
+            searchQuery.setText(getArguments().getString("query"));
+            searchButton.callOnClick();
+        }
 
         return root;
     }
 
     private void performSearch() {
-        final String query = searchQuery.getText().toString().toLowerCase();
+        query = searchQuery.getText().toString().toLowerCase();
 
         if (query.length() == 0) {
             searchResultsContainer.removeAllViews();
             return;
         }
 
-        SearchResult searchResult = search(query);
+        SearchResults searchResults = search(query);
 
-        showSearchResults(searchResult);
+        showSearchResults(searchResults);
     }
 
-    private void showSearchResults(SearchResult searchResult) {
+    private void showSearchResults(SearchResults searchResults) {
         searchResultsContainer.removeAllViews();
         int i = 0;
 
         // GROUPS
-        if (searchResult.groups.size() > 0) {
+        if (searchResults.groups().size() > 0) {
             final View view = View.inflate(getContext(), R.layout.fragment_part_search_result_header, null);
             final TextView section = view.findViewById(R.id.section);
 
@@ -77,10 +92,20 @@ public class SearchFragment extends TimeCraftersFragment {
         }
 
         i = 0;
-        for (Group group : searchResult.groups) {
+        for (SearchResult result : searchResults.groups()) {
+            final Group group = result.group;
             final View view = View.inflate(getContext(), R.layout.fragment_part_search_result, null);
             final Button button = view.findViewById(R.id.name);
             button.setText(group.name);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("group_index", config.getGroups().indexOf(group));
+                    bundle.putBoolean("is_search", true);
+                    Navigation.findNavController(v).navigate(R.id.navigation_editor, bundle);
+                }
+            });
 
             if (i % 2 == 0) { // even
                 view.setBackgroundColor(getResources().getColor(R.color.list_even));
@@ -93,7 +118,7 @@ public class SearchFragment extends TimeCraftersFragment {
         }
 
         // ACTIONS
-        if (searchResult.actions.size() > 0) {
+        if (searchResults.actions().size() > 0) {
             final View view = View.inflate(getContext(), R.layout.fragment_part_search_result_header, null);
             final TextView section = view.findViewById(R.id.section);
 
@@ -102,10 +127,21 @@ public class SearchFragment extends TimeCraftersFragment {
         }
 
         i = 0;
-        for (Action action : searchResult.actions) {
+        for (final SearchResult result : searchResults.actions()) {
+            final Action action = result.action;
             final View view = View.inflate(getContext(), R.layout.fragment_part_search_result, null);
             final Button button = view.findViewById(R.id.name);
             button.setText(action.name);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("group_index", config.getGroups().indexOf(result.group));
+                    bundle.putInt("action_index", result.group.getActions().indexOf(result.action));
+                    bundle.putBoolean("is_search", true);
+                    Navigation.findNavController(v).navigate(R.id.variables_fragment, bundle);
+                }
+            });
 
             if (i % 2 == 0) { // even
                 view.setBackgroundColor(getResources().getColor(R.color.list_even));
@@ -118,7 +154,7 @@ public class SearchFragment extends TimeCraftersFragment {
         }
 
         // VARIABLES
-        if (searchResult.variables.size() > 0) {
+        if (searchResults.variables().size() > 0) {
             final View view = View.inflate(getContext(), R.layout.fragment_part_search_result_header, null);
             final TextView section = view.findViewById(R.id.section);
 
@@ -127,10 +163,22 @@ public class SearchFragment extends TimeCraftersFragment {
         }
 
         i = 0;
-        for (Variable variable : searchResult.variables) {
+        for (final SearchResult result : searchResults.variables()) {
+            final Variable variable = result.variable;
             final View view = View.inflate(getContext(), R.layout.fragment_part_search_result, null);
             final Button button = view.findViewById(R.id.name);
             button.setText(variable.name + " [" + variable.value().toString() + "]");
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("group_index", config.getGroups().indexOf(result.group));
+                    bundle.putInt("action_index", result.group.getActions().indexOf(result.action));
+                    bundle.putInt("variable_index", result.action.getVariables().indexOf(result.variable));
+                    bundle.putBoolean("is_search", true);
+                    Navigation.findNavController(v).navigate(R.id.variables_fragment, bundle);
+                }
+            });
 
             if (i % 2 == 0) { // even
                 view.setBackgroundColor(getResources().getColor(R.color.list_even));
@@ -143,7 +191,7 @@ public class SearchFragment extends TimeCraftersFragment {
         }
 
         // PRESET GROUPS
-        if (searchResult.groupPresets.size() > 0) {
+        if (searchResults.groupPresets().size() > 0) {
             final View view = View.inflate(getContext(), R.layout.fragment_part_search_result_header, null);
             final TextView section = view.findViewById(R.id.section);
 
@@ -152,10 +200,21 @@ public class SearchFragment extends TimeCraftersFragment {
         }
 
         i = 0;
-        for (Group group : searchResult.groupPresets) {
+        for (final SearchResult result : searchResults.groupPresets()) {
+            final Group group = result.group;
             final View view = View.inflate(getContext(), R.layout.fragment_part_search_result, null);
             final Button button = view.findViewById(R.id.name);
             button.setText(group.name);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("group_index", config.getPresets().getGroups().indexOf(group));
+                    bundle.putBoolean("group_is_preset", true);
+                    bundle.putBoolean("is_search", true);
+                    Navigation.findNavController(v).navigate(R.id.actions_fragment, bundle);
+                }
+            });
 
             if (i % 2 == 0) { // even
                 view.setBackgroundColor(getResources().getColor(R.color.list_even));
@@ -168,7 +227,7 @@ public class SearchFragment extends TimeCraftersFragment {
         }
 
         // PRESET ACTIONS
-        if (searchResult.actions.size() > 0) {
+        if (searchResults.actionPresets().size() > 0) {
             final View view = View.inflate(getContext(), R.layout.fragment_part_search_result_header, null);
             final TextView section = view.findViewById(R.id.section);
 
@@ -177,10 +236,27 @@ public class SearchFragment extends TimeCraftersFragment {
         }
 
         i = 0;
-        for (Action action : searchResult.actionPresets) {
+        for (final SearchResult result : searchResults.actionPresets()) {
+            final Action action = result.action;
             final View view = View.inflate(getContext(), R.layout.fragment_part_search_result, null);
             final Button button = view.findViewById(R.id.name);
             button.setText(action.name);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    if (result.group != null) {
+                        bundle.putInt("group_index", config.getPresets().getGroups().indexOf(result.group));
+                        bundle.putInt("action_index", result.group.getActions().indexOf(action));
+                        bundle.putBoolean("group_is_preset", true);
+                    } else {
+                        bundle.putInt("action_index", config.getPresets().getActions().indexOf(action));
+                        bundle.putBoolean("action_is_preset", true);
+                    }
+                    bundle.putBoolean("is_search", true);
+                    Navigation.findNavController(v).navigate(R.id.variables_fragment, bundle);
+                }
+            });
 
             if (i % 2 == 0) { // even
                 view.setBackgroundColor(getResources().getColor(R.color.list_even));
@@ -193,7 +269,7 @@ public class SearchFragment extends TimeCraftersFragment {
         }
 
         // VARIABLES FROM PRESETS
-        if (searchResult.variablesFromPresets.size() > 0) {
+        if (searchResults.variablesFromPresets().size() > 0) {
             final View view = View.inflate(getContext(), R.layout.fragment_part_search_result_header, null);
             final TextView section = view.findViewById(R.id.section);
 
@@ -202,10 +278,29 @@ public class SearchFragment extends TimeCraftersFragment {
         }
 
         i = 0;
-        for (Variable variable : searchResult.variablesFromPresets) {
+        for (final SearchResult result : searchResults.variablesFromPresets()) {
+            final Variable variable = result.variable;
             final View view = View.inflate(getContext(), R.layout.fragment_part_search_result, null);
             final Button button = view.findViewById(R.id.name);
             button.setText(variable.name + " [" + variable.value().toString() + "]");
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    if (result.group != null) {
+                        bundle.putInt("group_index", config.getPresets().getGroups().indexOf(result.group));
+                        bundle.putInt("action_index", result.group.getActions().indexOf(result.action));
+                        bundle.putInt("variable_index", result.action.getVariables().indexOf(variable));
+                        bundle.putBoolean("group_is_preset", true);
+                    } else {
+                        bundle.putInt("action_index", config.getPresets().getActions().indexOf(result.action));
+                        bundle.putInt("variable_index", result.action.getVariables().indexOf(variable));
+                        bundle.putBoolean("action_is_preset", true);
+                    }
+                    bundle.putBoolean("is_search", true);
+                    Navigation.findNavController(v).navigate(R.id.variables_fragment, bundle);
+                }
+            });
 
             if (i % 2 == 0) { // even
                 view.setBackgroundColor(getResources().getColor(R.color.list_even));
@@ -218,60 +313,73 @@ public class SearchFragment extends TimeCraftersFragment {
         }
     }
 
-    private SearchResult search(String query) {
-        SearchResult searchResult = new SearchResult();
+    private SearchResults search(String query) {
+        SearchResults searchResults = new SearchResults();
 
-        searchGroups(query, searchResult);
-        searchActions(query, searchResult);
-        searchVariables(query, searchResult);
-        searchPresets(query, searchResult);
+        searchGroups(query, searchResults);
+        searchActions(query, searchResults);
+        searchVariables(query, searchResults);
+        searchPresets(query, searchResults);
 
-        return searchResult;
+        return searchResults;
     }
 
-    private void searchGroups(String query, SearchResult searchResult) {
+    private void searchGroups(String query, SearchResults searchResults) {
         for (Group group : config.getGroups()) {
             if (group.name.toLowerCase().contains(query)) {
-                searchResult.groups.add(group);
+                SearchResult result = new SearchResult(group, query, false);
+                searchResults.results.add(result);
             }
         }
     }
 
-    private void searchActions(String query, SearchResult searchResult) {
+    private void searchActions(String query, SearchResults searchResults) {
         for (Group group : config.getGroups()) {
             for (Action action : group.getActions()) {
                 if (action.name.toLowerCase().contains(query)) {
-                    searchResult.actions.add(action);
+                    SearchResult result = new SearchResult(group, action, query, false, false);
+                    searchResults.results.add(result);
                 }
             }
         }
     }
 
-    private void searchVariables(String query, SearchResult searchResult) {
+    private void searchVariables(String query, SearchResults searchResults) {
         for (Group group : config.getGroups()) {
             for (Action action : group.getActions()) {
                 for (Variable variable : action.getVariables()) {
                     if (variable.name.toLowerCase().contains(query)) {
-                        searchResult.variables.add(variable);
+                        SearchResult result = new SearchResult(group, action, variable, query, false, false);
+                        searchResults.results.add(result);
                     }
                     if (variable.value().toString().toLowerCase().contains(query)) {
-                        searchResult.variables.add(variable);
+                        SearchResult result = new SearchResult(group, action, variable, query, true, false);
+                        searchResults.results.add(result);
                     }
                 }
             }
         }
     }
 
-    private void searchPresets(String query, SearchResult searchResult) {
+    private void searchPresets(String query, SearchResults searchResults) {
         for (Group group : config.getPresets().getGroups()) {
             if (group.name.toLowerCase().contains(query)) {
-                searchResult.groupPresets.add(group);
+                SearchResult result = new SearchResult(group, query, true);
+                searchResults.results.add(result);
+            }
+
+            for (Action action : group.getActions()) {
+                if (action.name.toLowerCase().contains(query)) {
+                    SearchResult result = new SearchResult(group, action, query, false, true);
+                    searchResults.results.add(result);
+                }
             }
         }
 
         for (Action action : config.getPresets().getActions()) {
             if (action.name.toLowerCase().contains(query)) {
-                searchResult.actionPresets.add(action);
+                SearchResult result = new SearchResult(null, action, query, false, true);
+                searchResults.results.add(result);
             }
         }
 
@@ -279,10 +387,12 @@ public class SearchFragment extends TimeCraftersFragment {
             for (Action action : group.getActions()) {
                 for (Variable variable : action.getVariables()) {
                     if (variable.name.toLowerCase().contains(query)) {
-                        searchResult.variablesFromPresets.add(variable);
+                        SearchResult result = new SearchResult(group, action, variable, query, false, true);
+                        searchResults.results.add(result);
                     }
                     if (variable.value().toString().toLowerCase().contains(query)) {
-                        searchResult.variablesFromPresets.add(variable);
+                        SearchResult result = new SearchResult(group, action, variable, query, true, true);
+                        searchResults.results.add(result);
                     }
                 }
             }
@@ -291,10 +401,12 @@ public class SearchFragment extends TimeCraftersFragment {
         for (Action action : config.getPresets().getActions()) {
             for (Variable variable : action.getVariables()) {
                 if (variable.name.toLowerCase().contains(query)) {
-                    searchResult.variablesFromPresets.add(variable);
+                    SearchResult result = new SearchResult(null, action, variable, query, false, true);
+                    searchResults.results.add(result);
                 }
                 if (variable.value().toString().toLowerCase().contains(query)) {
-                    searchResult.variablesFromPresets.add(variable);
+                    SearchResult result = new SearchResult(null, action, variable, query, true, true);
+                    searchResults.results.add(result);
                 }
             }
         }
