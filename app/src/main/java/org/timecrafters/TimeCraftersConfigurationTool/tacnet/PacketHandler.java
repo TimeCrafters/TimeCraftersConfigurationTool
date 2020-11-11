@@ -117,7 +117,7 @@ public class PacketHandler {
 
         Backend.instance().writeToFile(path, json);
 
-        if (Backend.instance().getConfig().getName().equals(configName)) {
+        if (Backend.instance().getConfig() != null && Backend.instance().getConfig().getName().equals(configName)) {
             Backend.instance().loadConfig(configName);
         }
     }

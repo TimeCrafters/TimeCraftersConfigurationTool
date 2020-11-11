@@ -11,9 +11,12 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
 import org.timecrafters.TimeCraftersConfigurationTool.R;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersDialog;
+import org.timecrafters.TimeCraftersConfigurationTool.tacnet.PacketHandler;
 import org.timecrafters.TimeCraftersConfigurationTool.ui.settings.configurations.ConfigurationsFragment;
 
 public class ConfigurationDialog extends TimeCraftersDialog {
@@ -82,15 +85,29 @@ public class ConfigurationDialog extends TimeCraftersDialog {
                     if (configName != null) {
                         Backend.instance().moveConfig(configName, newConfigName);
 
+                        if (Backend.instance().tacnet().isConnected()) {
+                            Backend.instance().tacnet().puts(PacketHandler.packetUpdateConfig(configName, newConfigName).toString() );
+                        }
+
                         // If config being renamed is the active config then update Backend to use
                         // the correct config name/file, and save settings.
                         if (Backend.instance().getSettings().config.equals(configName)) {
                             Backend.instance().loadConfig(newConfigName);
                             Backend.instance().getSettings().config = newConfigName;
                             Backend.instance().saveSettings();
+
+                            if (Backend.instance().tacnet().isConnected()) {
+                                Backend.instance().tacnet().puts(PacketHandler.packetSelectConfig(newConfigName).toString() );
+                            }
                         }
                     } else {
                         Backend.instance().writeNewConfig(newConfigName);
+
+                        if (Backend.instance().tacnet().isConnected()) {
+                            final String json = Backend.instance().gsonForConfig().toJson(Backend.instance().loadConfigWithoutMutatingBackend(newConfigName));
+
+                            Backend.instance().tacnet().puts( PacketHandler.packetUploadConfig(newConfigName, json).toString() );
+                        }
                     }
 
                     ConfigurationsFragment fragment = (ConfigurationsFragment) getFragmentManager().getPrimaryNavigationFragment();

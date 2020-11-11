@@ -21,6 +21,7 @@ import org.timecrafters.TimeCraftersConfigurationTool.dialogs.ConfirmationDialog
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersDialog;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersDialogRunnable;
 import org.timecrafters.TimeCraftersConfigurationTool.library.TimeCraftersFragment;
+import org.timecrafters.TimeCraftersConfigurationTool.tacnet.PacketHandler;
 
 public class ConfigurationsFragment extends TimeCraftersFragment {
     final private String deleteActionKey = "delete_configuration";
@@ -71,16 +72,16 @@ public class ConfigurationsFragment extends TimeCraftersFragment {
             configName.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (Backend.instance().getSettings().config.equals(configFile)) {
-                        return;
-                    }
-
                     Backend.instance().getSettings().config = configFile;
                     Backend.instance().loadConfig(configFile);
                     Backend.instance().saveSettings();
 
                     View snackbarHost = getActivity().findViewById(R.id.snackbar_host);
                     Snackbar.make(snackbarHost, "Loaded config: " + configFile, Snackbar.LENGTH_LONG).show();
+
+                    if (Backend.instance().tacnet().isConnected()) {
+                        Backend.instance().tacnet().puts(PacketHandler.packetSelectConfig(configFile).toString() );
+                    }
                 }
             });
 
@@ -121,8 +122,12 @@ public class ConfigurationsFragment extends TimeCraftersFragment {
                             if (fragment != null) {
                                 fragment.populateConfigFiles();
                             }
+
+                            if (Backend.instance().tacnet().isConnected()) {
+                                Backend.instance().tacnet().puts(PacketHandler.packetDeleteConfig(configFile).toString() );
+                            }
                         }
-                    } ;
+                    };
                     Backend.getStorage().put(deleteActionKey, action);
                     dialog.setArguments(bundle);
 
