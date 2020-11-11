@@ -1,5 +1,6 @@
 package org.timecrafters.TimeCraftersConfigurationTool.backend;
 
+import android.os.Build;
 import android.os.Environment;
 
 import java.io.File;
@@ -16,4 +17,10 @@ public class TAC {
     public static final boolean BUILD_COMPETITION_MODE = false;
     public static final boolean BUILD_AUTO_START = false;
     public static final String BUILD_AUTO_START_MODEL = "rev hub"; /* LOWERCASE */
+
+    static public boolean allowAutoServerStart() {
+        return !TAC.BUILD_COMPETITION_MODE &&
+                TAC.BUILD_AUTO_START &&
+                Build.MODEL.toLowerCase().contains(TAC.BUILD_AUTO_START_MODEL);
+    }
 }

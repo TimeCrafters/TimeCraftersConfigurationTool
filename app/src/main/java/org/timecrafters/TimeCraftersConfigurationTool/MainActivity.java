@@ -1,6 +1,7 @@
 package org.timecrafters.TimeCraftersConfigurationTool;
 
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -15,6 +16,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.TAC;
+import org.timecrafters.TimeCraftersConfigurationTool.tacnet.TACNETOnBootReceiver;
 import org.timecrafters.TimeCraftersConfigurationTool.tacnet.TACNETServerService;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,8 +46,7 @@ public class MainActivity extends AppCompatActivity {
         Backend.instance().applicationContext = getApplicationContext();
 
         // Auto start TACNET server if allowed and device model contains AUTO_START_MODEL
-        if (!TAC.BUILD_COMPETITION_MODE && TAC.BUILD_AUTO_START && Backend.instance().getServer() == null &&
-                Build.MODEL.toLowerCase().contains(TAC.BUILD_AUTO_START_MODEL)) {
+        if (TAC.allowAutoServerStart() && Backend.instance().getServer() == null) {
             Log.i(TAG, "Detected " + Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.HARDWARE + "), starting TACNET Server Service...");
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -54,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
                 startService(new Intent(this, TACNETServerService.class));
             }
         }
+
+        registerReceiver(new TACNETOnBootReceiver(), new IntentFilter(Intent.ACTION_BOOT_COMPLETED));
 
         if (getIntent().getBooleanExtra("navigate_to_tacnet", false)) {
             Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.navigation_tacnet);
