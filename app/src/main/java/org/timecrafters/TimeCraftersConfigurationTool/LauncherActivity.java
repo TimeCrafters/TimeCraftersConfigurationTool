@@ -37,15 +37,6 @@ public class LauncherActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        Button websiteButton = findViewById(R.id.timecrafters_website_button);
-        websiteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://timecrafters.org"));
-                startActivity(browserIntent);
-            }
-        });
-
         if (havePermissions()) {
             if (Backend.instance() == null) {
                 new Backend();

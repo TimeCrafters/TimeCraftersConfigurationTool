@@ -74,6 +74,30 @@
                 android:text="@string/settings_start_server_at_boot" />
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:background="@color/list_odd"
+            android:orientation="horizontal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <Button
+                android:id="@+id/timecrafters_website_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TimeCrafters.org" />
+
+            <Button
+                android:id="@+id/timecrafters_configuration_tool_source_code_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Source Code" />
+        </LinearLayout>
     </LinearLayout>
 
 </ScrollView>

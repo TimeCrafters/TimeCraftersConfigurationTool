@@ -1,5 +1,7 @@
 package org.timecrafters.TimeCraftersConfigurationTool.ui.settings;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +30,8 @@ public class SettingsFragment extends TimeCraftersFragment {
         final Switch showNavigationLabels = root.findViewById(R.id.show_navigation_labels);
         final Switch disableLauncherDelay = root.findViewById(R.id.disable_launcher_delay);
         final Switch startServerAtBoot = root.findViewById(R.id.start_server_at_boot);
+        final Button websiteButton = root.findViewById(R.id.timecrafters_website_button);
+        final Button sourceCodeButton = root.findViewById(R.id.timecrafters_configuration_tool_source_code_button);
 
         final BottomNavigationView navView = getActivity().findViewById(R.id.nav_view);
 
@@ -87,6 +91,22 @@ public class SettingsFragment extends TimeCraftersFragment {
                 Backend.instance().saveSettings();
 
                 styleSwitch(buttonView, isChecked);
+            }
+        });
+
+        websiteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://timecrafters.org"));
+                startActivity(browserIntent);
+            }
+        });
+
+        sourceCodeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/TimeCrafters/TimeCraftersConfigurationTool"));
+                startActivity(browserIntent);
             }
         });
 
