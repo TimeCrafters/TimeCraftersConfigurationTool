@@ -167,7 +167,7 @@ public class Client {
   }
 
   public boolean isConnected() {
-    return this.socket != null && !this.socket.isClosed();
+    return this.socket != null && !this.socket.isClosed() && packetsReceived > 0;
   }
 
   public boolean isBound() {

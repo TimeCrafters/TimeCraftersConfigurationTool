@@ -25,6 +25,10 @@
     <color name="tacnetPrimary">#003f7f</color>
     <color name="tacnetSecondary">#007f7f</color>
 
+    <color name="tacnetConnectionConnecting">#ff8800</color>
+    <color name="tacnetConnectionConnected">@color/tacnetPrimary</color>
+    <color name="tacnetConnectionConnectionError">@color/colorDanger</color>
+
     <color name="switchOn">#ff8800</color>
 
     <color name="dialogBackground">#ddd</color>

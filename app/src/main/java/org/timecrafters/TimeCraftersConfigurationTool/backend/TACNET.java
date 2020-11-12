@@ -35,8 +35,10 @@ public class TACNET {
         connection.connect(new Runnable() {
             @Override
             public void run() {
-                Log.d(TAG, "run: " + connection.lastSocketError());
-                Backend.instance().startErrorSound(Backend.instance().applicationContext);
+                if (connection != null) {
+                    Log.d(TAG, "run: " + connection.lastSocketError());
+                    Backend.instance().startErrorSound(Backend.instance().applicationContext);
+                }
             }
         });
     }

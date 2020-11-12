@@ -2,11 +2,15 @@ package org.timecrafters.TimeCraftersConfigurationTool;
 
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
@@ -18,6 +22,7 @@ import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.TAC;
+import org.timecrafters.TimeCraftersConfigurationTool.backend.TACNET;
 import org.timecrafters.TimeCraftersConfigurationTool.tacnet.TACNETOnBootReceiver;
 import org.timecrafters.TimeCraftersConfigurationTool.tacnet.TACNETServerService;
 
@@ -46,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Backend.instance().applicationContext = getApplicationContext();
+        Backend.instance().mainActivity = this;
 
         if (Backend.instance().getSettings().mobileShowNavigationLabels) {
             navView.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
@@ -67,6 +73,32 @@ public class MainActivity extends AppCompatActivity {
         if (getIntent().getBooleanExtra("navigate_to_tacnet", false)) {
             Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.navigation_tacnet);
         }
+
+        startTACNETStatusIndictator();
+    }
+
+    private void startTACNETStatusIndictator() {
+        final Handler handler = new Handler(getMainLooper());
+
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                final TACNET tacnet = Backend.instance().tacnet();
+                final ActionBar actionBar = getSupportActionBar();
+
+                if (tacnet.isConnected()) {
+                    actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.tacnetConnectionConnected)));
+                } else if (tacnet.isConnecting()) {
+                    actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.tacnetConnectionConnecting)));
+                } else if (tacnet.isConnectionError()) {
+                    actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.tacnetConnectionConnectionError)));
+                } else {
+                    actionBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
+                }
+
+                handler.postDelayed(this, 500);
+            }
+        }, 0);
     }
 
     @Override

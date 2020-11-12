@@ -1,12 +1,15 @@
 package org.timecrafters.TimeCraftersConfigurationTool.tacnet;
 
+import android.os.Bundle;
 import android.util.Log;
 
+import org.timecrafters.TimeCraftersConfigurationTool.LauncherActivity;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Config;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.TAC;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Action;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.config.Group;
+import org.timecrafters.TimeCraftersConfigurationTool.dialogs.TACNETDialog;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -101,8 +104,22 @@ public class PacketHandler {
     private void handleHandShake(Packet packet) {}
     // NO-OP
     private void handleHeartBeat(Packet packet) {}
-    // NO-OP
-    private void handleError(Packet packet) {}
+
+    private void handleError(Packet packet) {
+        if (hostIsAConnection && Backend.instance().mainActivity != null) {
+            String[] split = packet.getContent().split("\\" + Packet.PROTOCOL_SEPERATOR, 2);
+            final String title = split[0];
+            final String message = split[1];
+
+            final TACNETDialog dialog = new TACNETDialog();
+            Bundle bundle = new Bundle();
+            bundle.putString("title", title);
+            bundle.putString("message", message);
+            dialog.setArguments(bundle);
+
+            dialog.show(Backend.instance().mainActivity.getSupportFragmentManager(), "TACNETMessage");
+        }
+    }
 
     private void handleUploadConfig(Packet packet) {
         String[] split = packet.getContent().split("\\" + Packet.PROTOCOL_SEPERATOR, 2);
@@ -290,7 +307,7 @@ public class PacketHandler {
         return Packet.create(Packet.PacketType.HEARTBEAT, Packet.PROTOCOL_HEARTBEAT);
     }
 
-    static private Packet packetError(String errorTitle, String errorMessage) {
+    static public Packet packetError(String errorTitle, String errorMessage) {
         return Packet.create(Packet.PacketType.ERROR, errorTitle + Packet.PROTOCOL_SEPERATOR + errorMessage);
     }
 

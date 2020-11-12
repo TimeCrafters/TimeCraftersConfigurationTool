@@ -75,7 +75,7 @@ public class Server {
 
       if (activeClient != null && !activeClient.isClosed()) {
         Log.i(TAG, "Too many clients, already have one connected!");
-        client.close("Too many clients!");
+        client.close( PacketHandler.packetError("Too many clients!", "Already have one connected!").toString() );
 
       } else {
         this.activeClient = client;
