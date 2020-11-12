@@ -5,6 +5,7 @@ import android.content.IntentFilter;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -13,6 +14,7 @@ import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.bottomnavigation.LabelVisibilityMode;
 
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
 import org.timecrafters.TimeCraftersConfigurationTool.backend.TAC;
@@ -44,6 +46,10 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Backend.instance().applicationContext = getApplicationContext();
+
+        if (Backend.instance().getSettings().mobileShowNavigationLabels) {
+            navView.setLabelVisibilityMode(LabelVisibilityMode.LABEL_VISIBILITY_LABELED);
+        }
 
         // Auto start TACNET server if allowed and device model contains AUTO_START_MODEL
         if (TAC.allowAutoServerStart() && Backend.instance().getServer() == null) {

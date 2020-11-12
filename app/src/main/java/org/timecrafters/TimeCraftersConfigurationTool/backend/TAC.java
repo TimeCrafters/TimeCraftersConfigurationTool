@@ -20,7 +20,8 @@ public class TAC {
 
     static public boolean allowAutoServerStart() {
         return !TAC.BUILD_COMPETITION_MODE &&
-                TAC.BUILD_AUTO_START &&
-                Build.MODEL.toLowerCase().contains(TAC.BUILD_AUTO_START_MODEL);
+                ((TAC.BUILD_AUTO_START &&
+                Build.MODEL.toLowerCase().contains(TAC.BUILD_AUTO_START_MODEL)) ||
+                (Backend.instance() != null && Backend.instance().getSettings().mobileStartServerAtBoot));
     }
 }

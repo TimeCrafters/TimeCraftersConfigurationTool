@@ -47,4 +47,7 @@
     <string name="add_from_preset">Add from preset</string>
     <string name="add_variable">Add Variable</string>
     <string name="variables">Variables</string>
+    <string name="settings_disable_launcher_delay">Disable Launcher Delay</string>
+    <string name="settings_start_server_at_boot">Start Server At Boot</string>
+    <string name="settings_show_navigation_labels">Show Navigation Labels</string>
 </resources>

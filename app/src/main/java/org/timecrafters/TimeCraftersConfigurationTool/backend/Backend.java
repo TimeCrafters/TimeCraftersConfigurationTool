@@ -327,7 +327,7 @@ public class Backend {
     }
 
     public void writeDefaultSettings() {
-        settings = new Settings(TACNET.DEFAULT_HOSTNAME, TACNET.DEFAULT_PORT, "");
+        settings = new Settings(TACNET.DEFAULT_HOSTNAME, TACNET.DEFAULT_PORT, "", false, false, false);
         saveSettings();
     }
 

@@ -16,10 +16,25 @@ public class SettingsDeserializer implements JsonDeserializer<Settings> {
         JsonObject jsonObject = json.getAsJsonObject();
         JsonObject data = jsonObject.get("data").getAsJsonObject();
 
+        /* Upgrade Settings */
+        if (data.get("mobile_show_navigation_labels") == null) {
+            data.addProperty("mobile_show_navigation_labels", false);
+        }
+        if (data.get("mobile_disable_launcher_delay") == null) {
+            data.addProperty("mobile_disable_launcher_delay", false);
+        }
+        if (data.get("mobile_start_server_at_boot") == null) {
+            data.addProperty("mobile_start_server_at_boot", false);
+        }
+
         return new Settings(
                     data.get("hostname").getAsString(),
                     data.get("port").getAsInt(),
-                    data.get("config").getAsString()
+                    data.get("config").getAsString(),
+
+                    data.get("mobile_show_navigation_labels").getAsBoolean(),
+                    data.get("mobile_disable_launcher_delay").getAsBoolean(),
+                    data.get("mobile_start_server_at_boot").getAsBoolean()
                 );
     }
 }

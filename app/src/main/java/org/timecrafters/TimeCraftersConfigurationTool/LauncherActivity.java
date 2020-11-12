@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
 import org.timecrafters.TimeCraftersConfigurationTool.dialogs.PermissionsRequestDialog;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
@@ -23,6 +24,7 @@ public class LauncherActivity extends AppCompatActivity {
     private static final int REQUEST_WRITE_PERMISSION = 70;
     private static final String TAG = "LauncherActivity";
     private static final long timerDelay = 2_000;
+    private static final long timerQuickDelay = 250; // Give LauncherActivity enough time to do first paint
     private static final long timerDelayAfterPermissionRequest = 500;
 
     @Override
@@ -45,7 +47,15 @@ public class LauncherActivity extends AppCompatActivity {
         });
 
         if (havePermissions()) {
-            startTimer(timerDelay);
+            if (Backend.instance() == null) {
+                new Backend();
+            }
+
+            if (Backend.instance().getSettings().mobileDisableLauncherDelay) {
+                startTimer(timerQuickDelay);
+            } else {
+                startTimer(timerDelay);
+            }
         } else {
             new PermissionsRequestDialog().show(getSupportFragmentManager(), null);
         }

@@ -22,6 +22,10 @@ public class SettingsSerializer implements JsonSerializer<Settings> {
         result.add("port", new JsonPrimitive(settings.port));
         result.add("config", new JsonPrimitive(settings.config));
 
+        result.add("mobile_show_navigation_labels", new JsonPrimitive(settings.mobileShowNavigationLabels));
+        result.add("mobile_disable_launcher_delay", new JsonPrimitive(settings.mobileDisableLauncherDelay));
+        result.add("mobile_start_server_at_boot", new JsonPrimitive(settings.mobileStartServerAtBoot));
+
         container.add("data", result);
 
         return container;
