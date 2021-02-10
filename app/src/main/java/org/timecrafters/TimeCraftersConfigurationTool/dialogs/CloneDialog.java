@@ -108,6 +108,7 @@ public class CloneDialog extends TimeCraftersDialog {
 
                         group.getActions().add(actionClone);
 
+                        Backend.instance().sortActions(group);
                         Backend.instance().configChanged();
                         ActionsFragment fragment = (ActionsFragment) getFragmentManager().getPrimaryNavigationFragment();
                         if (fragment != null) {
@@ -121,6 +122,7 @@ public class CloneDialog extends TimeCraftersDialog {
 
                         Backend.instance().getConfig().getGroups().add(groupClone);
 
+                        Backend.instance().sortGroups();
                         Backend.instance().configChanged();
                         GroupsFragment fragment = (GroupsFragment) getFragmentManager().getPrimaryNavigationFragment();
                         if (fragment != null) {

@@ -105,6 +105,7 @@ public class PresetsFragment extends TimeCraftersFragment {
                             if (Backend.instance().getConfig().getPresets().getGroups().get(group_index) != null) {
                                 Backend.instance().getConfig().getPresets().getGroups().remove(group_index);
 
+                                Backend.instance().sortGroupPresets();
                                 Backend.instance().configChanged();
                             }
 
@@ -182,6 +183,7 @@ public class PresetsFragment extends TimeCraftersFragment {
                             if (Backend.instance().getConfig().getPresets().getActions().get(action_index) != null) {
                                 Backend.instance().getConfig().getPresets().getActions().remove(action_index);
 
+                                Backend.instance().sortActionsPresets();
                                 Backend.instance().configChanged();
                             }
 

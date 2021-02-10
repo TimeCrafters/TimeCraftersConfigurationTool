@@ -158,6 +158,7 @@ public class GroupsFragment extends TimeCraftersFragment {
                         @Override
                         public void run(TimeCraftersDialog dialog) {
                             Backend.instance().getConfig().getGroups().remove(group);
+                            Backend.instance().sortGroups();
                             Backend.instance().configChanged();
                             Backend.getStorage().remove(deleteActionKey);
 

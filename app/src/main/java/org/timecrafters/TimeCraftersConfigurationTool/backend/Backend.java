@@ -322,6 +322,52 @@ public class Backend {
         writeToFile(TAC.SETTINGS_PATH, gsonForSettings().toJson(settings));
     }
 
+    public void sortGroups() {
+        Collections.sort(config.getGroups(), new Comparator<Group>() {
+            @Override
+            public int compare(Group a, Group b) {
+                return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+            }
+        });
+    }
+
+
+    public void sortActions(Group group) {
+        Collections.sort(group.getActions(), new Comparator<Action>() {
+            @Override
+            public int compare(Action a, Action b) {
+                return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+            }
+        });
+    }
+
+    public void sortVariables(Action action) {
+        Collections.sort(action.getVariables(), new Comparator<Variable>() {
+            @Override
+            public int compare(Variable a, Variable b) {
+                return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+            }
+        });
+    }
+
+    public void sortGroupPresets() {
+        Collections.sort(config.getPresets().getGroups(), new Comparator<Group>() {
+            @Override
+            public int compare(Group a, Group b) {
+                return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+            }
+        });
+    }
+
+    public void sortActionsPresets() {
+        Collections.sort(config.getPresets().getActions(), new Comparator<Action>() {
+            @Override
+            public int compare(Action a, Action b) {
+                return a.name.toLowerCase().compareTo(b.name.toLowerCase());
+            }
+        });
+    }
+
     public void writeDefaultSettings() {
         settings = new Settings(TACNET.DEFAULT_HOSTNAME, TACNET.DEFAULT_PORT, "", false, false, false);
         saveSettings();

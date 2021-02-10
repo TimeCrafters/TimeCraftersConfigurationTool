@@ -94,6 +94,7 @@ public class GroupDialog extends TimeCraftersDialog {
                         Backend.instance().getConfig().getGroups().add(group);
                     }
 
+                    Backend.instance().sortGroups();
                     Backend.instance().configChanged();
                     GroupsFragment fragment = (GroupsFragment) getFragmentManager().getPrimaryNavigationFragment();
                     if (fragment != null) {
