@@ -2,18 +2,13 @@ package org.timecrafters.TimeCraftersConfigurationTool;
 
 import android.Manifest;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
 import org.timecrafters.TimeCraftersConfigurationTool.dialogs.PermissionsRequestDialog;

@@ -4,7 +4,6 @@
     package="org.timecrafters.TimeCraftersConfigurationTool">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -22,11 +21,13 @@
         <service
             android:name=".tacnet.TACNETServerService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false"
+            android:permission="android.permission.WRITE_EXTERNAL_STORAGE" />
         <service
             android:name=".tacnet.TACNETConnectionService"
             android:enabled="true"
-            android:exported="false"/>
+            android:exported="false"
+            android:permission="android.permission.WRITE_EXTERNAL_STORAGE"/>
 
         <activity
             android:name=".LauncherActivity"
@@ -40,9 +41,15 @@
 
         <activity android:name=".MainActivity" />
 
-        <receiver android:name=".tacnet.TACNETOnBootReceiver">
+        <receiver
+            android:enabled="true"
+            android:exported="true"
+            android:name=".tacnet.TACNETOnBootReceiver"
+            android:permission="android.permission.BOOT_COMPLETED">
             <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
             </intent-filter>
         </receiver>
     </application>

@@ -15,13 +15,11 @@ public class TAC {
 
     // Set COMPETITION_MODE to true to disable automatic TACNET server start
     public static final boolean BUILD_COMPETITION_MODE = false;
-    public static final boolean BUILD_AUTO_START = false;
-    public static final String BUILD_AUTO_START_MODEL = "rev hub"; /* LOWERCASE */
+    public static final boolean BUILD_AUTO_START = true;
 
     static public boolean allowAutoServerStart() {
         return !TAC.BUILD_COMPETITION_MODE &&
-                ((TAC.BUILD_AUTO_START &&
-                Build.MODEL.toLowerCase().contains(TAC.BUILD_AUTO_START_MODEL)) ||
-                (Backend.instance() != null && Backend.instance().getSettings().mobileStartServerAtBoot));
+                TAC.BUILD_AUTO_START ||
+                Backend.instance() != null && Backend.instance().getSettings().mobileStartServerAtBoot;
     }
 }
