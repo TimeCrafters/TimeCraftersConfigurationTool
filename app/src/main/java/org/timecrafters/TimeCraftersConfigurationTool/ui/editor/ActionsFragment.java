@@ -209,28 +209,27 @@ public class ActionsFragment extends TimeCraftersFragment {
         menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.clone: {
-                        CloneDialog dialog = new CloneDialog();
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("group_index", getArguments().getInt("group_index"));
-                        bundle.putInt("action_index", action_index);
-                        dialog.setArguments(bundle);
-                        dialog.show(getFragmentManager(), "clone_dialog");
-                        return true;
-                    }
-                    case R.id.save_as_preset: {
-                        PresetDialog dialog = new PresetDialog();
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("group_index", getArguments().getInt("group_index"));
-                        bundle.putInt("action_index", action_index);
-                        bundle.putBoolean("is_new_preset", true);
-                        dialog.setArguments(bundle);
-                        dialog.show(getFragmentManager(), "preset_dialog");
-                        return true;
-                    }
-                    default:
-                        return false;
+                final int itemID = item.getItemId();
+
+                if (itemID == R.id.clone) {
+                    CloneDialog dialog = new CloneDialog();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("group_index", getArguments().getInt("group_index"));
+                    bundle.putInt("action_index", action_index);
+                    dialog.setArguments(bundle);
+                    dialog.show(getFragmentManager(), "clone_dialog");
+                    return true;
+                } else if (itemID == R.id.save_as_preset) {
+                    PresetDialog dialog = new PresetDialog();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("group_index", getArguments().getInt("group_index"));
+                    bundle.putInt("action_index", action_index);
+                    bundle.putBoolean("is_new_preset", true);
+                    dialog.setArguments(bundle);
+                    dialog.show(getFragmentManager(), "preset_dialog");
+                    return true;
+                } else {
+                    return false;
                 }
             }
         });
@@ -246,21 +245,21 @@ public class ActionsFragment extends TimeCraftersFragment {
         menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.add_from_preset: {
-                        AddFromPresetDialog dialog = new AddFromPresetDialog();
-                        Bundle bundle = new Bundle();
-                        bundle.putBoolean("show_actions", true);
-                        if (groupIsPreset) {
-                            bundle.putBoolean("group_is_preset", true);
-                        }
-                        bundle.putInt("group_index", getArguments().getInt("group_index"));
-                        dialog.setArguments(bundle);
-                        dialog.show(getFragmentManager(), "add_from_preset_dialog");
-                        return true;
+                final int itemID = item.getItemId();
+
+                if (itemID == R.id.add_from_preset) {
+                    AddFromPresetDialog dialog = new AddFromPresetDialog();
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("show_actions", true);
+                    if (groupIsPreset) {
+                        bundle.putBoolean("group_is_preset", true);
                     }
-                    default:
-                        return false;
+                    bundle.putInt("group_index", getArguments().getInt("group_index"));
+                    dialog.setArguments(bundle);
+                    dialog.show(getFragmentManager(), "add_from_preset_dialog");
+                    return true;
+                } else {
+                    return false;
                 }
             }
         });

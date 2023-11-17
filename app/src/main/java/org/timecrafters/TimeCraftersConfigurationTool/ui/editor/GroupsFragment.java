@@ -187,26 +187,27 @@ public class GroupsFragment extends TimeCraftersFragment {
         menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.clone: {
-                        CloneDialog dialog = new CloneDialog();
-                        Bundle bundle = new Bundle();
-                        bundle.putInt("group_index", group_index);
-                        dialog.setArguments(bundle);
-                        dialog.show(getFragmentManager(), "clone_dialog");
-                        return true;
-                    }
-                    case R.id.save_as_preset: {
-                        PresetDialog dialog = new PresetDialog();
-                        Bundle bundle = new Bundle();
-                        bundle.putBoolean("is_new_preset", true);
-                        bundle.putInt("group_index", group_index);
-                        dialog.setArguments(bundle);
-                        dialog.show(getFragmentManager(), "preset_dialog");
-                        return true;
-                    }
-                    default:
-                        return false;
+                final int itemID = item.getItemId();
+
+                if (itemID == R.id.clone) {
+                    CloneDialog dialog = new CloneDialog();
+                    Bundle bundle = new Bundle();
+                    bundle.putInt("group_index", group_index);
+                    dialog.setArguments(bundle);
+                    dialog.show(getFragmentManager(), "clone_dialog");
+
+                    return true;
+                } else if (itemID == R.id.save_as_preset) {
+                    PresetDialog dialog = new PresetDialog();
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("is_new_preset", true);
+                    bundle.putInt("group_index", group_index);
+                    dialog.setArguments(bundle);
+                    dialog.show(getFragmentManager(), "preset_dialog");
+
+                    return true;
+                } else {
+                    return false;
                 }
             }
         });
@@ -222,17 +223,17 @@ public class GroupsFragment extends TimeCraftersFragment {
         menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.add_from_preset: {
-                        AddFromPresetDialog dialog = new AddFromPresetDialog();
-                        Bundle bundle = new Bundle();
-                        bundle.putBoolean("show_actions", false);
-                        dialog.setArguments(bundle);
-                        dialog.show(getFragmentManager(), "add_from_preset_dialog");
-                        return true;
-                    }
-                    default:
-                        return false;
+                final int itemID = item.getItemId();
+
+                if (itemID == R.id.add_from_preset) {
+                    AddFromPresetDialog dialog = new AddFromPresetDialog();
+                    Bundle bundle = new Bundle();
+                    bundle.putBoolean("show_actions", false);
+                    dialog.setArguments(bundle);
+                    dialog.show(getFragmentManager(), "add_from_preset_dialog");
+                    return true;
+                } else {
+                   return false;
                 }
             }
         });

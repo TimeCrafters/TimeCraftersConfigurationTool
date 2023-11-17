@@ -249,33 +249,29 @@ public class VariableDialog extends TimeCraftersDialog {
         menu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.boolean_type: {
-                        setVariableType("boolean");
-                        return true;
-                    }
-                    case R.id.double_type: {
-                        setVariableType("double");
-                        return true;
-                    }
-                    case R.id.float_type: {
-                        setVariableType("float");
-                        return true;
-                    }
-                    case R.id.integer_type: {
-                        setVariableType("integer");
-                        return true;
-                    }
-                    case R.id.long_type: {
-                        setVariableType("long");
-                        return true;
-                    }
-                    case R.id.string_type: {
-                        setVariableType("string");
-                        return true;
-                    }
+                final int itemID = item.getItemId();
+
+                if (itemID == R.id.boolean_type) {
+                    setVariableType("boolean");
+                    return true;
+                } else if (itemID == R.id.double_type) {
+                    setVariableType("double");
+                    return true;
+                } else if (itemID == R.id.float_type) {
+                    setVariableType("float");
+                    return true;
+                } else if (itemID == R.id.integer_type) {
+                    setVariableType("integer");
+                    return true;
+                } else if (itemID == R.id.long_type) {
+                    setVariableType("long");
+                    return true;
+                } else if (itemID == R.id.string_type) {
+                    setVariableType("string");
+                    return true;
+                } else {
+                    return false;
                 }
-                return false;
             }
         });
 
