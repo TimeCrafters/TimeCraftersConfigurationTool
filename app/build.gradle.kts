@@ -8,7 +8,7 @@ android {
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "org.timecrafters.timecraftersconfigurationtool"
+        applicationId = "org.timecrafters.TimeCraftersConfigurationTool"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -49,6 +49,7 @@ android {
 dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("androidx.navigation:navigation-ui:2.7.5")
+    implementation("androidx.navigation:navigation-fragment:2.7.5")
     val appcompat_version = "1.6.1"
 
     implementation("androidx.appcompat:appcompat:$appcompat_version")

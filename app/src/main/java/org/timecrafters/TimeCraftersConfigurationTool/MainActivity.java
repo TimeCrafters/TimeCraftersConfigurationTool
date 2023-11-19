@@ -14,6 +14,7 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
@@ -43,7 +44,11 @@ public class MainActivity extends AppCompatActivity {
                 R.id.navigation_tacnet, R.id.navigation_editor, R.id.navigation_settings,
                 R.id.navigation_search)
                 .build();
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavHostFragment navHostFragment =
+                (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        NavController navController = navHostFragment.getNavController();
+        navController.setGraph(R.navigation.mobile_navigation);
+
         NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
         NavigationUI.setupWithNavController(navView, navController);
 
@@ -72,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(new TACNETOnBootReceiver(), new IntentFilter(Intent.ACTION_BOOT_COMPLETED));
 
         if (getIntent().getBooleanExtra("navigate_to_tacnet", false)) {
-            Navigation.findNavController(this, R.id.nav_host_fragment).navigate(R.id.navigation_tacnet);
+            navController.navigate(R.id.navigation_tacnet);
         }
 
         startTACNETStatusIndictator();
@@ -104,7 +109,10 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onSupportNavigateUp() {
-        NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
+        NavHostFragment navHostFragment =
+                (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        NavController navController = navHostFragment.getNavController();
+
         return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
     }
 
