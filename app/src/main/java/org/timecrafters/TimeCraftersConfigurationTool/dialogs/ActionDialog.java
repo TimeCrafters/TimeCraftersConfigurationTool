@@ -110,7 +110,7 @@ public class ActionDialog extends TimeCraftersDialog {
 
                     Backend.instance().sortActions(group);
                     Backend.instance().configChanged();
-                    ActionsFragment fragment = (ActionsFragment) getFragmentManager().getPrimaryNavigationFragment();
+                    ActionsFragment fragment = (ActionsFragment) getParentFragmentManager().getPrimaryNavigationFragment();
                     if (fragment != null) {
                         fragment.populateActions();
                     }

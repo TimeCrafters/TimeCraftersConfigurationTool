@@ -1,21 +1,15 @@
 package org.timecrafters.TimeCraftersConfigurationTool;
 
-import android.Manifest;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import org.timecrafters.TimeCraftersConfigurationTool.backend.Backend;
-import org.timecrafters.TimeCraftersConfigurationTool.dialogs.PermissionsRequestDialog;
-
-import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 public class LauncherActivity extends AppCompatActivity {
-    private static final int REQUEST_WRITE_PERMISSION = 70;
+//    private static final int REQUEST_WRITE_PERMISSION = 70;
     private static final String TAG = "LauncherActivity";
     private static final long timerDelay = 2_000;
     private static final long timerQuickDelay = 250; // Give LauncherActivity enough time to do first paint
@@ -31,33 +25,14 @@ public class LauncherActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        if (havePermissions()) {
-            if (Backend.instance() == null) {
-                new Backend();
-            }
-
-            if (Backend.instance().getSettings().mobileDisableLauncherDelay) {
-                startTimer(timerQuickDelay);
-            } else {
-                startTimer(timerDelay);
-            }
-        } else {
-            new PermissionsRequestDialog().show(getSupportFragmentManager(), null);
+        if (Backend.instance() == null) {
+            new Backend(getApplicationContext());
         }
-    }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case REQUEST_WRITE_PERMISSION: {
-                if (grantResults.length > 0 && grantResults[0] == PERMISSION_GRANTED) {
-                    // Permission granted
-                    startTimer(timerDelayAfterPermissionRequest);
-                } else {
-                    // Permission not given
-                    new PermissionsRequestDialog().show(getSupportFragmentManager(), null);
-                }
-            }
+        if (Backend.instance().getSettings().mobileDisableLauncherDelay) {
+            startTimer(timerQuickDelay);
+        } else {
+            startTimer(timerDelay);
         }
     }
 
@@ -71,15 +46,5 @@ public class LauncherActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         }, milliseconds);
-    }
-
-    private boolean havePermissions() {
-        return ContextCompat.checkSelfPermission(LauncherActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PERMISSION_GRANTED;
-    }
-
-    public void requestStoragePermissions() {
-        ActivityCompat.requestPermissions(LauncherActivity.this,
-                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                REQUEST_WRITE_PERMISSION);
     }
 }

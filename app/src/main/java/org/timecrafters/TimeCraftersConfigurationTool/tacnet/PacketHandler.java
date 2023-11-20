@@ -130,7 +130,7 @@ public class PacketHandler {
             return;
         }
 
-        final String path = TAC.CONFIGS_PATH + File.separator + configName + ".json";
+        final String path = Backend.instance().getConfigsPath() + File.separator + configName + ".json";
 
         Backend.instance().writeToFile(path, json);
 
@@ -145,7 +145,7 @@ public class PacketHandler {
         Log.i(TAG, "Got request for config: " + packet.getContent());
         Packet pkt;
         if (Backend.instance().configsList().contains(configName)) {
-            final String path = TAC.CONFIGS_PATH + File.separator + configName + ".json";
+            final String path = Backend.instance().getConfigsPath() + File.separator + configName + ".json";
 
             String content = Backend.instance().readFromFile(path);
             pkt = packetUploadConfig(configName, content);

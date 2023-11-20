@@ -38,7 +38,7 @@ public class TACNETServerService extends Service {
     @Override
     public void onCreate() {
         if (Backend.instance() == null) {
-            new Backend();
+            new Backend(getApplicationContext());
         }
     }
 
@@ -102,7 +102,7 @@ public class TACNETServerService extends Service {
     private void foregroundify() {
         Intent notificationIntent = new Intent(this, MainActivity.class);
         notificationIntent.putExtra("navigate_to_tacnet", true);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_MUTABLE | FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("TACNET Server")

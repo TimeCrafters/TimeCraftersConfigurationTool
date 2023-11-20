@@ -110,7 +110,7 @@ public class ConfigurationDialog extends TimeCraftersDialog {
                         }
                     }
 
-                    ConfigurationsFragment fragment = (ConfigurationsFragment) getFragmentManager().getPrimaryNavigationFragment();
+                    ConfigurationsFragment fragment = (ConfigurationsFragment) getParentFragmentManager().getPrimaryNavigationFragment();
                     if (fragment != null) {
                         fragment.populateConfigFiles();
                     }

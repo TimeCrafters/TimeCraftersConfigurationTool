@@ -43,7 +43,7 @@ public class ConfigurationsFragment extends TimeCraftersFragment {
             @Override
             public void onClick(View v) {
                 ConfigurationDialog dialog = new ConfigurationDialog();
-                dialog.show(getFragmentManager(), "add_configuration");
+                dialog.show(getParentFragmentManager(), "add_configuration");
             }
         });
 
@@ -93,7 +93,7 @@ public class ConfigurationsFragment extends TimeCraftersFragment {
                     bundle.putString("config_name", configFile);
                     dialog.setArguments(bundle);
 
-                    dialog.show(getFragmentManager(), "rename_configuration");
+                    dialog.show(getParentFragmentManager(), "rename_configuration");
                 }
             });
 
@@ -118,7 +118,7 @@ public class ConfigurationsFragment extends TimeCraftersFragment {
                                 Backend.instance().loadConfig("");
                             }
 
-                            ConfigurationsFragment fragment = (ConfigurationsFragment) dialog.getFragmentManager().getPrimaryNavigationFragment();
+                            ConfigurationsFragment fragment = (ConfigurationsFragment) dialog.getParentFragmentManager().getPrimaryNavigationFragment();
                             if (fragment != null) {
                                 fragment.populateConfigFiles();
                             }
@@ -131,7 +131,7 @@ public class ConfigurationsFragment extends TimeCraftersFragment {
                     Backend.getStorage().put(deleteActionKey, action);
                     dialog.setArguments(bundle);
 
-                    dialog.show(getFragmentManager(), deleteActionKey);
+                    dialog.show(getParentFragmentManager(), deleteActionKey);
                 }
             });
 

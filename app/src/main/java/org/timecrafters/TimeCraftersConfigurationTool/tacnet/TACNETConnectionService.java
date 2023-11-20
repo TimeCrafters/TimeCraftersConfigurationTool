@@ -61,7 +61,7 @@ public class TACNETConnectionService extends Service {
     private void foregroundify() {
         Intent notificationIntent = new Intent(this, MainActivity.class);
         notificationIntent.putExtra("navigate_to_tacnet", true);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, PendingIntent.FLAG_MUTABLE);
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
                 .setContentTitle("TACNET Connection")

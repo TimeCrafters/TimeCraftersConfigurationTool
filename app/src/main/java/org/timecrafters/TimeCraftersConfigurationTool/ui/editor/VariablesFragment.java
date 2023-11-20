@@ -79,7 +79,7 @@ public class VariablesFragment extends TimeCraftersFragment {
                 }
                 bundle.putInt("action_index", getArguments().getInt("action_index"));
                 dialog.setArguments(bundle);
-                dialog.show(getFragmentManager(), "add_variable");
+                dialog.show(getParentFragmentManager(), "add_variable");
             }
         });
 
@@ -122,7 +122,7 @@ public class VariablesFragment extends TimeCraftersFragment {
                     bundle.putInt("action_index", getArguments().getInt("action_index"));
                     bundle.putInt("variable_index", action.getVariables().indexOf(variable));
                     dialog.setArguments(bundle);
-                    dialog.show(getFragmentManager(), "edit_variable");
+                    dialog.show(getParentFragmentManager(), "edit_variable");
                 }
             });
 
@@ -142,7 +142,7 @@ public class VariablesFragment extends TimeCraftersFragment {
                             Backend.instance().configChanged();
                             Backend.getStorage().remove(deleteActionKey);
 
-                            VariablesFragment fragment = (VariablesFragment) dialog.getFragmentManager().getPrimaryNavigationFragment();
+                            VariablesFragment fragment = (VariablesFragment) dialog.getParentFragmentManager().getPrimaryNavigationFragment();
                             if (fragment != null) {
                                 fragment.populateVariables();
                             }
@@ -150,7 +150,7 @@ public class VariablesFragment extends TimeCraftersFragment {
                     };
                     Backend.getStorage().put(deleteActionKey, actionRunner);
 
-                    dialog.show(getFragmentManager(), deleteActionKey);
+                    dialog.show(getParentFragmentManager(), deleteActionKey);
                 }
             });
 

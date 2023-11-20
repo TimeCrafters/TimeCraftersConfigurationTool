@@ -190,10 +190,10 @@ public class PresetDialog extends TimeCraftersDialog {
                 Backend.instance().getConfig().getPresets().getGroups().add(groupClone);
                 Backend.instance().sortGroupPresets();
 
-                GroupsFragment fragment = (GroupsFragment) getFragmentManager().getPrimaryNavigationFragment();
+                GroupsFragment fragment = (GroupsFragment) getParentFragmentManager().getPrimaryNavigationFragment();
                 Snackbar.make(fragment.getActivity().findViewById(R.id.snackbar_host), "Saved group preset: " + presetName, Snackbar.LENGTH_LONG).show();
             } else { // Don't repopulate presets when it is not possible
-                PresetsFragment fragment = (PresetsFragment) getFragmentManager().getPrimaryNavigationFragment();
+                PresetsFragment fragment = (PresetsFragment) getParentFragmentManager().getPrimaryNavigationFragment();
                 if (fragment != null) {
                     Backend.instance().sortGroupPresets();
                     fragment.populatePresets();
@@ -224,10 +224,10 @@ public class PresetDialog extends TimeCraftersDialog {
                 Backend.instance().getConfig().getPresets().getActions().add(actionClone);
                 Backend.instance().sortActionsPresets();
 
-                ActionsFragment fragment = (ActionsFragment) getFragmentManager().getPrimaryNavigationFragment();
+                ActionsFragment fragment = (ActionsFragment) getParentFragmentManager().getPrimaryNavigationFragment();
                 Snackbar.make(fragment.getActivity().findViewById(R.id.snackbar_host), "Saved action preset: " + presetName, Snackbar.LENGTH_LONG).show();
             } else { // Don't repopulate presets when it is not possible
-                PresetsFragment fragment = (PresetsFragment) getFragmentManager().getPrimaryNavigationFragment();
+                PresetsFragment fragment = (PresetsFragment) getParentFragmentManager().getPrimaryNavigationFragment();
                 if (fragment != null) {
                     Backend.instance().sortActionsPresets();
 

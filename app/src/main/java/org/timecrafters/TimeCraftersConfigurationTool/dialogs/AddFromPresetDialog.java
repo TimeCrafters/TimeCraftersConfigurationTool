@@ -72,7 +72,7 @@ public class AddFromPresetDialog extends TimeCraftersDialog {
                     bundle.putBoolean("is_cloning_preset", true);
                     bundle.putInt("group_index", index);
                     dialog.setArguments(bundle);
-                    dialog.show(getFragmentManager(), "clone_group_preset");
+                    dialog.show(getParentFragmentManager(), "clone_group_preset");
 
                     dismiss();
                 }
@@ -107,7 +107,7 @@ public class AddFromPresetDialog extends TimeCraftersDialog {
                     bundle.putInt("group_index", getArguments().getInt("group_index"));
                     bundle.putInt("action_index", index);
                     dialog.setArguments(bundle);
-                    dialog.show(getFragmentManager(), "clone_action_preset");
+                    dialog.show(getParentFragmentManager(), "clone_action_preset");
 
                     dismiss();
                 }

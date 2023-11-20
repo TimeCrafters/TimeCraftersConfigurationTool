@@ -36,7 +36,6 @@ public class TACNETHostFragment extends TimeCraftersFragment {
         final View root = inflater.inflate(R.layout.fragment_tacnet_host, viewGroup, false);
         final LinearLayout container = (LinearLayout) root;
 
-
         if (Backend.instance().tacnet().status() != TACNET.Status.NOT_CONNECTED) {
             inflateTACNETConnectionStatus(container);
         } else if (Backend.instance().getServer() != null) {

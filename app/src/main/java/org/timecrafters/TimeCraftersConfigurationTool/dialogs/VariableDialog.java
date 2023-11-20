@@ -164,7 +164,7 @@ public class VariableDialog extends TimeCraftersDialog {
 
                     Backend.instance().sortVariables(action);
                     Backend.instance().configChanged();
-                    VariablesFragment fragment = (VariablesFragment) getFragmentManager().getPrimaryNavigationFragment();
+                    VariablesFragment fragment = (VariablesFragment) getParentFragmentManager().getPrimaryNavigationFragment();
                     if (fragment != null) {
                         fragment.populateVariables();
                     }

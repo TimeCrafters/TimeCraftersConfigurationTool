@@ -85,7 +85,7 @@ public class PresetsFragment extends TimeCraftersFragment {
                     Bundle bundle = new Bundle();
                     bundle.putInt("group_index", group_index);
                     dialog.setArguments(bundle);
-                    dialog.show(getFragmentManager(), "preset_dialog");
+                    dialog.show(getParentFragmentManager(), "preset_dialog");
                 }
             });
 
@@ -109,7 +109,7 @@ public class PresetsFragment extends TimeCraftersFragment {
                                 Backend.instance().configChanged();
                             }
 
-                            PresetsFragment fragment = (PresetsFragment) dialog.getFragmentManager().getPrimaryNavigationFragment();
+                            PresetsFragment fragment = (PresetsFragment) dialog.getParentFragmentManager().getPrimaryNavigationFragment();
                             if (fragment != null) {
                                 fragment.populatePresets();
                             }
@@ -118,7 +118,7 @@ public class PresetsFragment extends TimeCraftersFragment {
                     Backend.getStorage().put(deletePresetKey, action);
                     dialog.setArguments(bundle);
 
-                    dialog.show(getFragmentManager(), deletePresetKey);
+                    dialog.show(getParentFragmentManager(), deletePresetKey);
                 }
             });
 
@@ -163,7 +163,7 @@ public class PresetsFragment extends TimeCraftersFragment {
                     Bundle bundle = new Bundle();
                     bundle.putInt("action_index", action_index);
                     dialog.setArguments(bundle);
-                    dialog.show(getFragmentManager(), "preset_dialog");
+                    dialog.show(getParentFragmentManager(), "preset_dialog");
                 }
             });
 
@@ -187,7 +187,7 @@ public class PresetsFragment extends TimeCraftersFragment {
                                 Backend.instance().configChanged();
                             }
 
-                            PresetsFragment fragment = (PresetsFragment) dialog.getFragmentManager().getPrimaryNavigationFragment();
+                            PresetsFragment fragment = (PresetsFragment) dialog.getParentFragmentManager().getPrimaryNavigationFragment();
                             if (fragment != null) {
                                 fragment.populatePresets();
                             }
@@ -196,7 +196,7 @@ public class PresetsFragment extends TimeCraftersFragment {
                     Backend.getStorage().put(deletePresetKey, action);
                     dialog.setArguments(bundle);
 
-                    dialog.show(getFragmentManager(), deletePresetKey);
+                    dialog.show(getParentFragmentManager(), deletePresetKey);
                 }
             });
 

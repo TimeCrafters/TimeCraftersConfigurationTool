@@ -78,7 +78,7 @@ public class ActionsFragment extends TimeCraftersFragment {
                 }
                 bundle.putInt("group_index", getArguments().getInt("group_index"));
                 dialog.setArguments(bundle);
-                dialog.show(getFragmentManager(), "add_action");
+                dialog.show(getParentFragmentManager(), "add_action");
             }
         });
 
@@ -164,7 +164,7 @@ public class ActionsFragment extends TimeCraftersFragment {
                     bundle.putInt("group_index", getArguments().getInt("group_index"));
                     bundle.putInt("action_index", group.getActions().indexOf(action));
                     dialog.setArguments(bundle);
-                    dialog.show(getFragmentManager(), "edit_action");
+                    dialog.show(getParentFragmentManager(), "edit_action");
                 }
             });
 
@@ -184,7 +184,7 @@ public class ActionsFragment extends TimeCraftersFragment {
                             Backend.instance().configChanged();
                             Backend.getStorage().remove(deleteActionKey);
 
-                            ActionsFragment fragment = (ActionsFragment) dialog.getFragmentManager().getPrimaryNavigationFragment();
+                            ActionsFragment fragment = (ActionsFragment) dialog.getParentFragmentManager().getPrimaryNavigationFragment();
                             if (fragment != null) {
                                 fragment.populateActions();
                             }
@@ -192,7 +192,7 @@ public class ActionsFragment extends TimeCraftersFragment {
                     };
                     Backend.getStorage().put(deleteActionKey, actionRunner);
 
-                    dialog.show(getFragmentManager(), deleteActionKey);
+                    dialog.show(getParentFragmentManager(), deleteActionKey);
                 }
             });
 
@@ -217,7 +217,7 @@ public class ActionsFragment extends TimeCraftersFragment {
                     bundle.putInt("group_index", getArguments().getInt("group_index"));
                     bundle.putInt("action_index", action_index);
                     dialog.setArguments(bundle);
-                    dialog.show(getFragmentManager(), "clone_dialog");
+                    dialog.show(getParentFragmentManager(), "clone_dialog");
                     return true;
                 } else if (itemID == R.id.save_as_preset) {
                     PresetDialog dialog = new PresetDialog();
@@ -226,7 +226,7 @@ public class ActionsFragment extends TimeCraftersFragment {
                     bundle.putInt("action_index", action_index);
                     bundle.putBoolean("is_new_preset", true);
                     dialog.setArguments(bundle);
-                    dialog.show(getFragmentManager(), "preset_dialog");
+                    dialog.show(getParentFragmentManager(), "preset_dialog");
                     return true;
                 } else {
                     return false;
@@ -256,7 +256,7 @@ public class ActionsFragment extends TimeCraftersFragment {
                     }
                     bundle.putInt("group_index", getArguments().getInt("group_index"));
                     dialog.setArguments(bundle);
-                    dialog.show(getFragmentManager(), "add_from_preset_dialog");
+                    dialog.show(getParentFragmentManager(), "add_from_preset_dialog");
                     return true;
                 } else {
                     return false;

@@ -67,12 +67,14 @@ public class Backend {
         return storage;
     }
 
-    public Backend() {
+    public Backend(Context applicationContext) {
         if (Backend.instance() != null) {
             throw(new RuntimeException("Backend instance already exists!"));
         } else {
             instance = this;
         }
+
+        this.applicationContext = applicationContext;
 
         loadSettings();
         if (!settings.config.isEmpty()) {
@@ -120,6 +122,18 @@ public class Backend {
         return lastServerError;
     }
 
+    public String getRootPath() {
+        return String.format("%s%s", applicationContext.getExternalFilesDir("").getAbsolutePath(), File.separator + "TimeCrafters_Configuration_Tool");
+    }
+
+    public String getConfigsPath() {
+        return String.format("%s%s", getRootPath(),  File.separator + "/configs");
+    }
+
+    public String getSettingsPath() {
+        return String.format("%s%s", getRootPath(),  File.separator + "settings.json");
+    }
+
     public Config getConfig() {
         return config;
     }
@@ -147,7 +161,7 @@ public class Backend {
     public boolean hasConfigChanged() { return configChanged; }
 
     public String configPath(String name) {
-        return TAC.CONFIGS_PATH + File.separator + name + ".json";
+        return getConfigsPath() + File.separator + name + ".json";
     }
 
     public void loadConfig(String name) {
@@ -249,7 +263,7 @@ public class Backend {
     public ArrayList<String> configsList() {
         ArrayList<String> list = new ArrayList<>();
 
-        File directory = new File(TAC.CONFIGS_PATH);
+        File directory = new File(getConfigsPath());
         FilenameFilter filter = new FilenameFilter() {
             @Override
             public boolean accept(File dir, String name) {
@@ -302,7 +316,7 @@ public class Backend {
     }
 
     public void loadSettings() {
-        File settingsFile = new File(TAC.SETTINGS_PATH);
+        File settingsFile = new File(getSettingsPath());
 
         if (!settingsFile.exists()) {
             Log.i(TAG, "Writing default settings.json");
@@ -319,7 +333,7 @@ public class Backend {
 
     public void saveSettings() {
         Log.i(TAG, "Settings: " + gsonForSettings().toJson(settings));
-        writeToFile(TAC.SETTINGS_PATH, gsonForSettings().toJson(settings));
+        writeToFile(getSettingsPath(), gsonForSettings().toJson(settings));
     }
 
     public void sortGroups() {
@@ -369,7 +383,7 @@ public class Backend {
     }
 
     public void writeDefaultSettings() {
-        settings = new Settings(TACNET.DEFAULT_HOSTNAME, TACNET.DEFAULT_PORT, "", false, false, false);
+        settings = new Settings(TACNET.DEFAULT_HOSTNAME, TACNET.DEFAULT_PORT, "", true, false, false);
         saveSettings();
     }
 
@@ -402,7 +416,7 @@ public class Backend {
 
     public boolean writeToFile(String filePath, String content) {
         try {
-            if (filePath.startsWith(TAC.ROOT_PATH)) {
+            if (filePath.startsWith(getRootPath())) {
                 createFolders(filePath);
 
                 FileWriter writer = new FileWriter(filePath);
@@ -422,8 +436,8 @@ public class Backend {
     }
 
     private void createFolders(String filePath) throws IOException {
-        File rootPath = new File(TAC.ROOT_PATH);
-        File configsPath = new File(TAC.CONFIGS_PATH);
+        File rootPath = new File(getRootPath());
+        File configsPath = new File(getConfigsPath());
 
         if (!rootPath.exists()) {
             rootPath.mkdir();

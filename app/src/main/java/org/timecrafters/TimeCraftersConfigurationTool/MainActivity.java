@@ -8,8 +8,10 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.NavController;
@@ -53,10 +55,9 @@ public class MainActivity extends AppCompatActivity {
         NavigationUI.setupWithNavController(navView, navController);
 
         if (Backend.instance() == null) {
-            new Backend();
+            new Backend(getApplicationContext());
         }
 
-        Backend.instance().applicationContext = getApplicationContext();
         Backend.instance().mainActivity = this;
 
         if (Backend.instance().getSettings().mobileShowNavigationLabels) {
@@ -77,7 +78,11 @@ public class MainActivity extends AppCompatActivity {
         registerReceiver(new TACNETOnBootReceiver(), new IntentFilter(Intent.ACTION_BOOT_COMPLETED));
 
         if (getIntent().getBooleanExtra("navigate_to_tacnet", false)) {
-            navController.navigate(R.id.navigation_tacnet);
+            //--- Emulate clicking on menu item...
+            navView.getMenu().performIdentifierAction(R.id.navigation_tacnet, 0);
+
+            //--- ...because using this function breaks the Editor nav button, for reasons :|
+            // navController.navigate(R.id.navigation_tacnet, null);
         }
 
         startTACNETStatusIndictator();
